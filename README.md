@@ -27,7 +27,7 @@ This project outlines a robust CI/CD pipeline designed to deploy the ITGenius ap
 ### 4. **Infrastructure as Code (IaC)**
 - Tools like **Terraform** and **Ansible** handle infrastructure provisioning and configuration management:
   - **Terraform:** Automates the creation and management of infrastructure components, such as IAM roles and database resources.
-  - **Ansible:** Configures the monolithic server to ensure it is ready to run the JAR file.
+  - **Ansible:** Configures all servers including monolithic server to ensure it is ready to run the JAR file.
 
 ### 5. **Artifact Management**
 - The generated JAR file is stored and versioned in the **Nexus Repository** for secure artifact management.
