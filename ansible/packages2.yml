@@ -1,0 +1,65 @@
+---
+- name: Install AWS CLI
+  hosts: jenkins
+  become: yes
+  tasks:
+    - name: Download AWS CLI
+      command: "curl -o /usr/local/bin/awscliv2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+      args:
+        creates: /usr/local/bin/awscliv2.zip
+
+    - name: Check if /usr/local/bin/aws exists as a file
+      stat:
+        path: /usr/local/bin/aws
+      register: aws_path
+
+    - name: Remove conflicting file if it exists
+      file:
+        path: /usr/local/bin/aws
+        state: absent
+      when: aws_path.stat.exists and not aws_path.stat.isdir
+
+- name: Install Maven, Git, Docker, and MySQL client on Jenkins
+  hosts: jenkins
+  become: yes
+  tasks:
+    - name: Check if HashiCorp repository exists
+      shell: "yum repolist | grep -qw hashicorp"
+      register: hashicorp_repo
+      ignore_errors: yes
+
+    - name: Disable HashiCorp repository temporarily
+      command: "yum-config-manager --disable hashicorp"
+      when: hashicorp_repo.rc == 0
+
+    - name: Install Maven using yum
+      yum:
+        name: maven
+        state: present
+
+    - name: Install Git
+      yum:
+        name: git
+        state: present
+
+    - name: Install Docker
+      yum:
+        name: docker
+        state: present
+
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add Jenkins to the Docker group
+      user:
+        name: jenkins
+        groups: docker
+        append: yes
+
+    - name: Restart Docker service
+      systemd:
+        name: docker
+        state: restarted

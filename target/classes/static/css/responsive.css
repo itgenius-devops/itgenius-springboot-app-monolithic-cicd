@@ -1,0 +1,5 @@
+@media screen and (max-width: 375px) {
+  #careerDiv {
+    width: 123px !important;
+  }
+}

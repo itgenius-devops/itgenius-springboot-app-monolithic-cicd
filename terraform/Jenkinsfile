@@ -1,0 +1,79 @@
+pipeline {
+    agent any
+    options {
+        timeout(time: 40, unit: 'MINUTES')
+    }
+
+    parameters {
+        string(name: 'GITHUB_CREDENTIAL', defaultValue: 'github_creds', description: 'Github access credentials id')
+        string(name: 'GITHUB_REPO_URL', defaultValue: 'https://github.com/dkojo/itgenius-springbootapp-cicd.git', description: 'Github repository url')
+        string(name: 'GITHUB_BRANCH', defaultValue: 'main', description: 'Github branch for your build')
+        choice(name: 'TERRAFORM_ACTION', choices: ['', 'apply', 'destroy'], description: 'Select Terraform action: Apply or Destroy')
+        string(name: 'AWS_CREDENTIAL_ID', defaultValue: 'aws_creds', description: 'AWS credentials id')
+    }
+
+    environment {
+        GITHUB_CREDENTIAL = "${params.GITHUB_CREDENTIAL}"
+        GITHUB_REPO_URL = "${params.GITHUB_REPO_URL}"
+        GITHUB_BRANCH = "${params.GITHUB_BRANCH}"
+        TERRAFORM_ACTION = "${params.TERRAFORM_ACTION}"
+        AWS_CREDENTIAL_ID = "${params.AWS_CREDENTIAL_ID}"
+    }
+
+    stages {
+        stage("Validate Parameters") {
+            steps {
+                script {
+                    if (TERRAFORM_ACTION == null || TERRAFORM_ACTION.trim() == '') {
+                        error('TERRAFORM_ACTION is a required parameter. Please choose either "apply" or "destroy".')
+                    }
+                }
+            }
+        }
+
+        stage("Checkout Code From GitHub") {
+            steps {
+                script {
+                    git branch: "${GITHUB_BRANCH}", credentialsId: "${GITHUB_CREDENTIAL}", url: "${GITHUB_REPO_URL}"
+                }
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                script {
+                    // Change into the Terraform code directory
+                    dir("${WORKSPACE}/terraform/terraform-config-files") {
+                         withCredentials([aws(credentialsId: "${AWS_CREDENTIAL_ID}", accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                            sh 'terraform init'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                script {
+                    dir("${WORKSPACE}/terraform/terraform-config-files") {
+                         withCredentials([aws(credentialsId: "${AWS_CREDENTIAL_ID}", accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                            sh 'terraform plan'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Apply Or Destroy') {
+            steps {
+                script {
+                    dir("${WORKSPACE}/terraform/terraform-config-files") {
+                         withCredentials([aws(credentialsId: "${AWS_CREDENTIAL_ID}", accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                            sh 'terraform "${TERRAFORM_ACTION}" -auto-approve'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

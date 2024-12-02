@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="./input.css"/>
+    <link rel="stylesheet" href="./css/style.css"/>
+    <link rel="stylesheet" href="./css/responsive.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"
+    />
+
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon"/>
+    <title>It Genius</title>
+</head>
+<body>
+<!-- Header -->
+<header class="w-full z-[100] fixed top-0">
+    <div class="bg-[#5700FC] py-3 text-white text-sm font-medium">
+        <div class="container mx-auto px-5 lg:px-10">
+            <div class="flex justify-end md:justify-between">
+                <ul class="hidden md:flex gap-5">
+                    <li>
+                        <a href="/" class="hover:text-[#72E7FE] duration-150">
+                            <i class="fa-solid fa-location-dot mr-2"></i>
+                            Colfax,NC
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/" class="hover:text-[#72E7FE] duration-150">
+                            <i class="fa-solid fa-envelope mr-2"></i>
+                            info@itgenius.io
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/" class="hover:text-[#72E7FE] duration-150">
+                            <i class="fa-solid fa-headset mr-2"></i>
+                            24/7 Customer Support
+                        </a>
+                    </li>
+                </ul>
+                <ul class="flex gap-5 cursor-pointer">
+<!--                    <li onclick="openLoginModal()">Login</li>-->
+                    <li sec:authorize="isAuthenticated()" onclick="logout()">Logout</li>
+                    <li sec:authorize="!isAuthenticated()" onclick="openLoginModal()">Login</li>
+
+                    <li onclick="openRegisterModal()">Register</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="bg-white py-2">
+        <div class="container mx-auto px-4 lg:px-10">
+            <div class="block md:flex justify-between items-center">
+                <div class="flex justify-between items-center">
+                    <a href="/">
+                        <img
+                                src="./img/logo.webp"
+                                alt=""
+                                class="w-[165px] lg:w-[210px]"
+                        />
+                    </a>
+                    <button
+                            onclick="navFun()"
+                            id="navbtn"
+                            class="block md:hidden bg-[#0096FF] text-white px-2 py-1 rounded"
+                    >
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+                <div id="nav" class="hidden md:block">
+                    <ul
+                            class="block md:flex gap-2 mt-4 md:mt-0 divide-y md:divide-y-0 font-medium text-sm"
+                    >
+                        <li>
+                            <a
+                                    href="/"
+                                    class="block md:inline-block bg-[#0096FF] text-white px-4 lg:px-7 py-3 lg:py-4 duration-150"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                    href="/"
+                                    class="block md:inline-block hover:bg-[#0096FF] hover:text-white px-4 lg:px-7 py-3 lg:py-4 duration-150"
+                            >
+                                ABOUT US
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                    href="/"
+                                    class="block md:inline-block hover:bg-[#0096FF] hover:text-white px-4 lg:px-7 py-3 lg:py-4 duration-150"
+                            >
+                                FAQ
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                    href="/"
+                                    class="block md:inline-block hover:bg-[#0096FF] hover:text-white px-4 lg:px-7 py-3 lg:py-4 duration-150"
+                            >
+                                TESTIMONIAL
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                    href="/"
+                                    class="block md:inline-block hover:bg-[#0096FF] hover:text-white px-4 lg:px-7 py-3 lg:py-4 duration-150"
+                            >
+                                CONTACT US
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="mt-20"></div>
+<!-- Hero Carousel -->
+<div class="relative w-full h-screen overflow-hidden">
+    <div
+            class="absolute inset-0 bg-gradient-to-r from-blue-800 to-blue-500"
+    ></div>
+    <div class="swiper-container relative z-10 h-full">
+        <div class="swiper-wrapper h-full">
+            <!-- Slide 1 -->
+            <div
+                    class="swiper-slide flex flex-col lg:flex-row items-center h-full"
+            >
+                <div
+                        class="w-full lg:w-1/2 p-10 lg:p-20 flex flex-col justify-center"
+                >
+                    <h2 class="text-4xl font-extrabold text-white mb-4">
+                        Empower Your Career
+                    </h2>
+                    <p class="text-lg text-white mb-6">
+                        Join a community of skilled DevOps professionals. Enhance your
+                        skills with training and certifications that make you stand out
+                        in the competitive tech landscape.
+                    </p>
+                    <button
+                            class="bg-white text-blue-500 font-semibold py-2 px-6 rounded shadow-md hover:bg-gray-100 transition duration-200"
+                    >
+                        Learn More
+                    </button>
+                </div>
+                <div class="w-full lg:w-1/2">
+                    <img
+                            src="https://itgenius.io/wp-content/uploads/2024/01/slider-1_-3.png"
+                            alt="Empower Your Career"
+                            class="object-cover h-full"
+                    />
+                </div>
+            </div>
+            <!-- Slide 2 -->
+            <div
+                    class="swiper-slide flex flex-col lg:flex-row items-center h-full"
+            >
+                <div
+                        class="w-full lg:w-1/2 p-10 lg:p-20 flex flex-col justify-center"
+                >
+                    <h2 class="text-4xl font-extrabold text-white mb-4">
+                        Hands-On Workshops
+                    </h2>
+                    <p class="text-lg text-white mb-6">
+                        Participate in interactive workshops that cover the latest
+                        DevOps tools and techniques. Get practical experience and build
+                        projects that you can showcase to employers.
+                    </p>
+                    <button
+                            class="bg-white text-blue-500 font-semibold py-2 px-6 rounded shadow-md hover:bg-gray-100 transition duration-200"
+                    >
+                        Join Now
+                    </button>
+                </div>
+                <div class="w-full lg:w-1/2">
+                    <img
+                            src="https://itgenius.io/wp-content/uploads/2024/01/2nd-1.png"
+                            alt="Hands-On Workshops"
+                            class="object-cover h-full"
+                    />
+                </div>
+            </div>
+            <!-- Slide 3 -->
+            <div
+                    class="swiper-slide flex flex-col lg:flex-row items-center h-full"
+            >
+                <div
+                        class="w-full lg:w-1/2 p-10 lg:p-20 flex flex-col justify-center"
+                >
+                    <h2 class="text-4xl font-extrabold text-white mb-4">
+                        Networking Opportunities
+                    </h2>
+                    <p class="text-lg text-white mb-6">
+                        Connect with industry leaders and peers at our networking
+                        events. Share insights, collaborate on projects, and open doors
+                        to new career opportunities.
+                    </p>
+                    <button
+                            class="bg-white text-blue-500 font-semibold py-2 px-6 rounded shadow-md hover:bg-gray-100 transition duration-200"
+                    >
+                        Get Involved
+                    </button>
+                </div>
+                <div class="w-full lg:w-1/2">
+                    <img
+                            src="https://itgenius.io/wp-content/uploads/2024/01/image-1.png"
+                            alt="Networking Opportunities"
+                            class="object-cover h-full"
+                    />
+                </div>
+            </div>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Navigation -->
+        <div
+                class="swiper-button-next flex items-center justify-center rounded-full bg-white text-blue-500 shadow-lg p-2 hover:bg-blue-500 hover:text-white transition duration-200"
+        >
+            <i class="fas fa-chevron-right"></i>
+            <!-- Adjust icon as needed -->
+        </div>
+        <div
+                class="swiper-button-prev flex items-center justify-center rounded-full bg-white text-blue-500 shadow-lg p-2 hover:bg-blue-500 hover:text-white transition duration-200"
+        >
+            <i class="fas fa-chevron-left"></i>
+            <!-- Adjust icon as needed -->
+        </div>
+    </div>
+</div>
+
+<!-- Community -->
+<div class="community text-center py-10 md:py-[100px]">
+    <div class="container mx-auto px-4 lg:px-10">
+        <h1
+                class="text-xl md:text-[28px] lg:text-[45px] font-[700] text-[#222222] uppercase w-full xl:w-[1000px] leading-normal lg:leading-[55px] mx-0 xl:mx-auto mb-8"
+        >
+            Join a community of 1,000+ Professional DevOps and Cloud Experts
+        </h1>
+        <p class="w-full text-sm xl:w-[900px] mx-0 xl:mx-auto text-[#60586E]">
+            Discover our thriving community of Professional DevOps and cloud
+            experts. Join us for comprehensive training programs, hands-on
+            workshops, and networking opportunities to accelerate your career in
+            IT.
+        </p>
+    </div>
+</div>
+
+<!-- VedioSection  -->
+<div class="relative lg:h-[600px] overflow-hidden">
+    <video
+            src="./video/robert_meg2-1080p-240915.mp4"
+            autoplay
+            muted
+            class="w-full"
+    ></video>
+    <div
+            class="player absolute top-0 w-full h-full flex justify-center items-center"
+    >
+        <div class="text-center">
+            <button
+                    class="relative overflow-hidden hover:text-[#0096FF] mb-2 md:mb-10 px-4 py-2 md:px-9 md:py-8 bg-[#EDEDED] text-[#5c049b] transition-transform duration-150 transform hover:rotate-12"
+                    onclick="openModal()"
+            >
+                <i class="fa-solid fa-play text-sm md:text-[26px]"></i>
+            </button>
+            <h1
+                    class="text-xl md:text-[60px] text-[#fff] font-medium drop-shadow-[0_0px_2px_#0096FF]"
+            >
+                See why we are best.
+            </h1>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div
+        id="videoModal"
+        class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-90 z-[999] p-4"
+        onclick="closeModal()"
+>
+    <div
+            class="relative bg-white rounded-lg shadow-lg overflow-hidden max-w-2xl mx-auto"
+    >
+        <button
+                onclick="closeModal()"
+                class="absolute top-4 right-4 text-gray-700 hover:text-gray-900 transition duration-150 z-10"
+                aria-label="Close modal"
+        >
+            ✖
+        </button>
+        <video
+                id="modalVideo"
+                src="./video/robert_meg2-1080p-240915.mp4"
+                controls
+                class="w-full h-auto max-h-[80vh] object-cover"
+        ></video>
+    </div>
+</div>
+
+<div class="bg-[#F7F9FA] py-10 md:py-[100px]">
+    <div class="container mx-auto px-4 lg:px-10">
+        <div class="grid md:grid-cols-3 gap-8">
+            <div
+                    class="text-center lg:pb-[100px] px-4 lg:px-[32px] p-[25px] bg-white border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/teaIicon.png" alt="" class="mx-auto"/>
+                <h1 class="text-[20px] font-medium text-[#0096FF] my-6">
+                    Help From Experts
+                </h1>
+                <p class="text-sm lg:text-[16px]">
+                    Get expert guidance and support from our seasoned professionals.
+                    Our team of experienced DevOps and cloud experts is here to assist
+                    you every step of the way.
+                </p>
+            </div>
+            <div
+                    class="text-center lg:pb-[100px] px-4 lg:px-[32px] p-[25px] bg-white border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/net.png" alt="" class="mx-auto"/>
+                <h1 class="text-[20px] font-medium text-[#0096FF] my-6">
+                    Build Your Network
+                </h1>
+                <p class="text-sm lg:text-[16px]">
+                    Enhance skills, forge connections, and grow with experienced
+                    professionals in IT. Collaborate on projects and build lasting
+                    relationships in our dynamic training environment.
+                </p>
+            </div>
+            <div
+                    class="text-center lg:pb-[100px] px-4 lg:px-[32px] p-[25px] bg-white border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/bulb.png" alt="" class="mx-auto"/>
+                <h1 class="text-[20px] font-medium text-[#0096FF] my-6">
+                    Real-life Lessons
+                </h1>
+                <p class="text-sm lg:text-[16px]">
+                    Experience hands-on learning with industry scenarios,
+                    problem-solving, and direct application. Gain practical insights
+                    for an agile and impactful training experience.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- AboutUs -->
+<section class="bg-[#1B496A] text-white py-10 md:py-[80px]">
+    <div class="lg:max-w-7xl mx-auto container">
+        <div class="grid md:grid-cols-2 items-center">
+            <figure class="w-full">
+                <img
+                        src="./img/about-1-1536x948.webp"
+                        alt="About Us Image"
+                        class="w-full"
+                />
+            </figure>
+            <article class="px-4 md:px-10 mt-5">
+                <h1
+                        class="text-[28px] lg:text-[45px] font-bold text-center md:text-start"
+                >
+                    ABOUT US
+                    <span
+                            class="mx-auto md:mx-0 my-5 w-[50px] md:w-[70px] h-[3px] block bg-[#72FFFF]"
+                    ></span>
+                </h1>
+                <p class="text-xs md:text-sm my-10 leading-[25.2px]">
+                    Welcome to our comprehensive DevOps course, where we offer a
+                    transformative learning experience tailored to your needs. Our
+                    mission is to empower learners at every stage of their IT journey
+                    with a wealth of resources and expertise. Our DevOps course is
+                    designed to explore the core principles, best practices, and
+                    essential tools necessary for successful DevOps implementation...
+                </p>
+                <a
+                        href="/"
+                        class="inline-block text-black px-6 lg:px-8 py-3 bg-white font-medium hover:bg-[#550FA2] hover:text-white duration-150"
+                >
+                    READ MORE
+                </a>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- Why Join us? -->
+<div class="text-center py-10 md:py-[80px]">
+    <div class="container mx-auto px-4 lg:px-10">
+        <h1
+                class="uppercase text-[#222222] text-[28px] lg:text-[45px] font-bold"
+        >
+            Why Join us?
+            <span
+                    class="mx-auto my-3 w-[50px] md:w-[70px] h-[3px] block bg-[#72FFFF]"
+            ></span>
+        </h1>
+        <p
+                class="text-xs md:text-base text-[#515151] mx-auto w-full lg:w-[80%] mt-7 my-10 leading-[25.2px]"
+        >
+            Your choice of learning environment is crucial. At Ityourway, we
+            provide an exceptional blend of high-quality education, assistance,
+            and cost-effectiveness.
+        </p>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div
+                    class="text-center px-4 lg:px-[32px] py-[25px] bg-[#FAFAFA] border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/coaching.png" alt="" class="mx-auto"/>
+                <h1 class="text-[20px] font-medium text-[#0096FF] my-6">
+                    One-on-one coaching
+                </h1>
+                <p class="text-sm text-[#515151]">
+                    Tailored, individualized coaching sessions for focused skill
+                    development, progress tracking, and achieving your specific
+                    learning objectives.
+                </p>
+            </div>
+            <div
+                    class="text-center px-4 lg:px-[32px] py-[25px] bg-[#FAFAFA] border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/dollar.png" alt="" class="mx-auto"/>
+                <h1 class="text-[20px] font-medium text-[#0096FF] my-6">
+                    Flexible payment plans
+                </h1>
+                <p class="text-sm text-[#515151]">
+                    Experience our online course with hassle-free learning through
+                    flexible payment plans tailored to your budget and convenience.
+                </p>
+            </div>
+            <div
+                    class="text-center px-4 lg:px-[32px] py-[25px] bg-[#FAFAFA] border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/hand.png" alt="" class="mx-auto"/>
+                <h1 class="text-[20px] font-medium text-[#0096FF] my-6">
+                    Job support
+                </h1>
+                <p class="text-sm text-[#515151]">
+                    Access dedicated job support services, ensuring a smooth
+                    transition from learning to successful employment in IT careers.
+                </p>
+            </div>
+            <div
+                    class="text-center px-4 lg:px-[32px] py-[25px] bg-[#FAFAFA] border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/headset.png" alt="" class="mx-auto"/>
+                <h1 class="text-[20px] font-medium text-[#0096FF] my-6">
+                    24/7 Support
+                </h1>
+                <p class="text-sm text-[#515151]">
+                    Continuous support guarantees you access to assistance at any
+                    hour, enhancing your learning experience.
+                </p>
+            </div>
+            <div
+                    class="text-center px-4 lg:px-[32px] py-[25px] bg-[#FAFAFA] border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/growing.png" alt="" class="mx-auto"/>
+                <h1 class="text-[20px] font-medium text-[#0096FF] my-6">
+                    From zero to hero
+                </h1>
+                <p class="text-sm text-[#515151]">
+                    We set you up for success in the IT industry. Top students can go
+                    from earning zero to six figures.
+                </p>
+            </div>
+            <div
+                    class="text-center px-4 lg:px-[32px] py-[25px] bg-[#FAFAFA] border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/laptop.png" alt="" class="mx-auto"/>
+                <h1 class="text-[20px] font-medium text-[#0096FF] my-6">
+                    Latest technology
+                </h1>
+                <p class="text-sm text-[#515151]">
+                    Stay current with industry trends through our training programs,
+                    which focus on in-demand software and regular updates.
+                </p>
+            </div>
+        </div>
+        <button
+                class="uppercase mt-12 text-black px-6 lg:px-8 py-3 bg-[#550FA2] font-medium hover:bg-[#0096FF] text-white duration-150"
+        >
+            <a href="/" class="text-white">student testimonial</a>
+        </button>
+    </div>
+</div>
+<!-- Requirements -->
+<div class="bg-[#F7F9FA] text-center py-10 md:py-[80px]">
+    <div class="container mx-auto px-4 lg:px-10">
+        <h1
+                class="uppercase text-[#222222] text-[28px] lg:text-[45px] font-bold"
+        >
+            Requirements for getting started
+            <span
+                    class="mx-auto my-3 w-[50px] md:w-[70px] h-[3px] block bg-[#72FFFF]"
+            ></span>
+        </h1>
+        <p
+                class="text-xs md:text-base text-[#515151] mx-auto w-full lg:w-[80%] mt-7 my-10 leading-[25.2px]"
+        >
+            It matters where you study. Ityourway offers a unique combination of
+            top-tier training, support and affordability.
+        </p>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div
+                    class="text-center px-4 py-10 bg-white border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/desktop.png" alt="" class="mx-auto"/>
+                <h1
+                        class="text-[20px] lg:text-[25px] font-bold text-[#0096FF] my-6"
+                >
+                    Laptop/Desktop
+                </h1>
+                <p class="text-[#0096FF] text-xs lg:text-[16px]">
+                    At least 8G RAM & 250G HARD DISK SPACE
+                </p>
+            </div>
+            <div
+                    class="text-center px-4 py-10 bg-white border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/notebook.png" alt="" class="mx-auto"/>
+                <h1
+                        class="text-[20px] lg:text-[25px] font-bold text-[#0096FF] my-6"
+                >
+                    Notebook
+                </h1>
+            </div>
+            <div
+                    class="text-center px-4 py-10 bg-white border border-[#0096FF] border-b-4 hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/determination.png" alt="" class="mx-auto"/>
+                <h1
+                        class="text-[20px] lg:text-[25px] font-bold text-[#0096FF] my-6"
+                >
+                    Determination
+                </h1>
+            </div>
+        </div>
+        <button
+                class="uppercase mt-12 text-black px-6 lg:px-8 py-3 bg-[#550FA2] font-medium hover:bg-[#0096FF] text-white duration-150"
+        >
+            <a href="/">Enroll today</a>
+        </button>
+    </div>
+</div>
+<!-- Experience -->
+<div class="text-center py-10 md:py-[80px]">
+    <div class="container mx-auto px-4 lg:px-10">
+        <div class="w-full lg:w-[60%] mx-auto">
+            <h1
+                    class="uppercase text-[#222222] text-[28px] lg:text-[45px] font-bold"
+            >
+                Everything is a learning experience
+                <span
+                        class="mx-auto my-3 w-[50px] md:w-[70px] h-[3px] block bg-[#72FFFF]"
+                ></span>
+            </h1>
+            <p
+                    class="text-xs md:text-base text-[#515151] mt-7 my-10 leading-[25.2px]"
+            >
+                Learning often happens in classrooms but it doesn’t have to. Use
+                Ityourway to facilitate learning experiences no matter the context.
+            </p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div
+                    class="text-center bg-white border border-[#0096FF] border-b-4 hover:border-[#550FA2] hover:rounded-lg overflow-hidden duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/IT-YOUR-WAY-4-1-1536x742.webp" alt=""/>
+                <div class="px-4 pt-5 pb-10 lg:pb-[100px]">
+                    <h1
+                            class="text-[20px] lg:text-[25px] font-medium text-[#0096FF] my-3"
+                    >
+                        JULY SESSION
+                    </h1>
+                    <p class="text-[#868797] my-5">
+                        This session started on July 13, 2024.
+                    </p>
+                    <span class="text-[red] font-medium cursor-pointer"
+                    >REGISTRATION CLOSED</span
+                    >
+                </div>
+            </div>
+            <div
+                    class="text-center bg-white border border-[#0096FF] border-b-4 hover:border-[#550FA2] hover:rounded-lg overflow-hidden duration-150 shadow-xl border-b-[#0096FF]"
+            >
+                <img src="./img/IT-YOUR-WAY-4-1-1536x742.webp" alt=""/>
+                <div class="px-4 pt-5 pb-10 lg:pb-[100px]">
+                    <h1
+                            class="text-[20px] lg:text-[25px] font-medium text-[#0096FF] my-3"
+                    >
+                        JANUARY SESSION
+                    </h1>
+                    <p class="text-[#868797] my-5">
+                        The January session will start on January 18, 2025. Registration
+                        Opening Soon.
+                    </p>
+                    <button
+                            class="uppercase text-black px-6 lg:px-8 py-3 bg-[#550FA2] font-medium hover:bg-[#0096FF] text-white duration-150"
+                    >
+                        <a href="/">Enroll today</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Career -->
+
+<div class="bg-[#F7F9FA] py-10 md:py-[80px]">
+    <div class="container mx-auto px-4 lg:px-10">
+        <div class="text-center">
+            <h1
+                    class="uppercase text-[#222222] text-[28px] lg:text-[45px] font-bold"
+            >
+                Career Path
+                <span
+                        class="mx-auto my-3 w-[50px] md:w-[70px] h-[3px] block bg-[#72FFFF]"
+                ></span>
+            </h1>
+            <p
+                    class="text-xs md:text-base text-[#1DA1FE] mx-auto w-full lg:w-[80%] mt-7 my-10 leading-[25.2px]"
+            >
+                Once you have completed your training program you will be able to
+                unlock job opportunities all over the world:
+            </p>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-6">
+            <a href="/">
+                <div
+                        id="careerDiv"
+                        class="h-full w-[160px] lg:w-[260px] text-center px-4 py-10 border-2 border-[#0096FF] hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+                >
+                    <img
+                            src="./img/remote-access.svg"
+                            alt=""
+                            class="mx-auto w-[95px] border border-[#0497FF] p-4 rounded-full"
+                    />
+                    <p class="mt-5 font-medium text-xs lg:text-[16px]">
+                        Cloud Support Engineer
+                    </p>
+                </div>
+            </a>
+
+            <a href="/">
+                <div
+                        id="careerDiv"
+                        class="h-full w-[160px] lg:w-[260px] text-center px-4 py-10 border-2 border-[#0096FF] hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+                >
+                    <img
+                            src="./img/shield.svg"
+                            alt=""
+                            class="mx-auto w-[95px] border border-[#0497FF] p-4 rounded-full"
+                    />
+                    <p class="mt-5 font-medium text-xs lg:text-[16px]">
+                        Site Reliability Engineer
+                    </p>
+                </div>
+            </a>
+
+            <a href="/">
+                <div
+                        id="careerDiv"
+                        class="h-full w-[160px] lg:w-[260px] text-center px-4 py-10 border-2 border-[#0096FF] hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+                >
+                    <img
+                            src="./img/cloud-computing.svg"
+                            alt=""
+                            class="mx-auto w-[95px] border border-[#0497FF] p-4 rounded-full"
+                    />
+                    <p class="mt-5 font-medium text-xs lg:text-[16px]">
+                        AWS Solutions Architect
+                    </p>
+                </div>
+            </a>
+
+            <a href="/">
+                <div
+                        id="careerDiv"
+                        class="h-full w-[160px] lg:w-[260px] text-center px-4 py-10 border-2 border-[#0096FF] hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+                >
+                    <img
+                            src="./img/docker.svg"
+                            alt=""
+                            class="mx-auto w-[95px] border border-[#0497FF] p-4 rounded-full"
+                    />
+                    <p class="mt-5 font-medium text-xs lg:text-[16px]">
+                        Kubernetes Administrator
+                    </p>
+                </div>
+            </a>
+
+            <a href="/">
+                <div
+                        id="careerDiv"
+                        class="h-full w-[160px] lg:w-[260px] text-center px-4 py-10 border-2 border-[#0096FF] hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+                >
+                    <img
+                            src="./img/data-analysis.svg"
+                            alt=""
+                            class="mx-auto w-[95px] border border-[#0497FF] p-4 rounded-full"
+                    />
+                    <p class="mt-5 font-medium text-xs lg:text-[16px]">
+                        Cloud Platform Engineer
+                    </p>
+                </div>
+            </a>
+
+            <a href="/">
+                <div
+                        id="careerDiv"
+                        class="h-full w-[160px] lg:w-[260px] text-center px-4 py-10 border-2 border-[#0096FF] hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+                >
+                    <img
+                            src="./img/risk-management.svg"
+                            alt=""
+                            class="mx-auto w-[95px] border border-[#0497FF] p-4 rounded-full"
+                    />
+                    <p class="mt-5 font-medium text-xs lg:text-[16px]">
+                        Vulnerability Management Analyst
+                    </p>
+                </div>
+            </a>
+
+            <a href="/">
+                <div
+                        id="careerDiv"
+                        class="h-full w-[160px] lg:w-[260px] text-center px-4 py-10 border-2 border-[#0096FF] hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+                >
+                    <img
+                            src="./img/developer.svg"
+                            alt=""
+                            class="mx-auto w-[95px] border border-[#0497FF] p-4 rounded-full"
+                    />
+                    <p class="mt-5 font-medium text-xs lg:text-[16px]">
+                        Software Engineer
+                    </p>
+                </div>
+            </a>
+
+            <a href="/">
+                <div
+                        id="careerDiv"
+                        class="h-full w-[160px] lg:w-[260px] text-center px-4 py-10 border-2 border-[#0096FF] hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+                >
+                    <img
+                            src="./img/automation.svg"
+                            alt=""
+                            class="mx-auto w-[95px] border border-[#0497FF] p-4 rounded-full"
+                    />
+                    <p class="mt-5 font-medium text-xs lg:text-[16px]">
+                        Cloud Support Engineer
+                    </p>
+                </div>
+            </a>
+
+            <a href="/">
+                <div
+                        id="careerDiv"
+                        class="h-full w-[160px] lg:w-[260px] text-center px-4 py-10 border-2 border-[#0096FF] hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+                >
+                    <img
+                            src="./img/linux.svg"
+                            alt=""
+                            class="mx-auto w-[95px] border border-[#0497FF] p-4 rounded-full"
+                    />
+                    <p class="mt-5 font-medium text-xs lg:text-[16px]">
+                        Linux Systems Engineer
+                    </p>
+                </div>
+            </a>
+
+            <a href="/">
+                <div
+                        id="careerDiv"
+                        class="h-full w-[160px] lg:w-[260px] text-center px-4 py-10 border-2 border-[#0096FF] hover:border-[#550FA2] duration-150 shadow-xl border-b-[#0096FF]"
+                >
+                    <img
+                            src="./img/consultant.svg"
+                            alt=""
+                            class="mx-auto w-[95px] border border-[#0497FF] p-4 rounded-full"
+                    />
+                    <p class="mt-5 font-medium text-xs lg:text-[16px]">
+                        IT Consultant
+                    </p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="bg-white py-10 md:py-[80px]">
+        <div class="container mx-auto px-4 lg:px-10">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <a href="/">
+                        <img
+                                src="./img/logo.webp"
+                                alt="Logo"
+                                class="w-[165px] lg:w-[210px] mb-4"
+                        />
+                    </a>
+                    <p class="text-[#515151] text-sm pr-4 leading-[28.8px]">
+                        Over 10 years of experience and knowledge of international
+                        standards, technological changes, and industrial systems.
+                    </p>
+                </div>
+                <div>
+                    <h1 class="text-[18px] font-medium mb-3">MENU</h1>
+                    <i class="fa-solid fa-ellipsis mt-2 mb-5"></i>
+                    <ul>
+                        <li>
+                            <a
+                                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                                    href="/"
+                            >HOME</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                                    href="/"
+                            >ABOUT US</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                                    href="/"
+                            >FAQ</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                                    href="/"
+                            >TESTIMONIAL</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                                    href="/"
+                            >CONTACT US</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h1 class="text-[18px] font-medium mb-3">SOCIAL</h1>
+                    <i class="fa-solid fa-ellipsis mt-2 mb-5"></i>
+                    <ul>
+                        <li>
+                            <a
+                                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                                    href="/"
+                            >
+                                <i
+                                        class="fa-solid fa-location-dot mr-2 text-[#0096FF] text-xl"
+                                ></i>
+                                Colfax, NC 27235
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                                    href="/"
+                            >
+                                <i
+                                        class="fa-solid fa-envelope mr-2 text-[#0096FF] text-xl"
+                                ></i>
+                                info@itgenius.io
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                                    href="/"
+                            >
+                                <i
+                                        class="fa-solid fa-phone mr-2 text-[#0096FF] text-xl"
+                                ></i>
+                                +1(336)340-7953
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="flex mt-5 gap-3">
+                        <a
+                                href="/"
+                                class="px-3 py-2 text-white bg-[#0096FF] hover:bg-[#6A1FA2] duration-150"
+                        >
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a
+                                href="/"
+                                class="px-4 py-2 text-white bg-[#0096FF] hover:bg-[#6A1FA2] duration-150"
+                        >
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a
+                                href="/"
+                                class="px-3 py-2 text-white bg-[#0096FF] hover:bg-[#6A1FA2] duration-150"
+                        >
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-[#0096FF] py-5">
+        <div class="container mx-auto px-4 lg:px-10 text-center text-white">
+            <p class="text-sm">© 2023 IT Genius. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Modal -->
+<div
+        id="authModal"
+        class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-70 z-[999] p-4"
+        onclick="closeAuthModal()"
+>
+    <div
+            class="relative bg-white rounded-lg shadow-lg overflow-hidden max-w-lg w-full p-6"
+            onclick="event.stopPropagation();"
+    >
+        <button
+                onclick="closeAuthModal()"
+                class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 transition"
+        >
+            ✖
+        </button>
+        <div class="flex justify-center mb-4">
+            <img src="./img/logo.webp" alt="Brand Logo" class="h-12"/>
+        </div>
+        <div class="tabs flex justify-between border-b border-gray-300 mb-4">
+            <button
+                    id="loginTab"
+                    class="tab-button flex-1 text-gray-600 py-3 font-semibold transition-colors duration-200 border-b-4 border-transparent hover:bg-blue-700 hover:text-white"
+                    onclick="showLoginForm()"
+            >
+                Login
+            </button>
+            <button
+                    id="registerTab"
+                    class="tab-button flex-1 text-gray-600 py-3 font-semibold transition-colors duration-200 border-b-4 border-transparent hover:bg-blue-700 hover:text-white"
+                    onclick="showRegisterForm()"
+            >
+                Register
+            </button>
+        </div>
+        <div
+                id="authForm"
+                class="flex flex-col space-y-4 max-h-[60vh] overflow-y-auto"
+        >
+            <!-- Login Form -->
+            <!--          <form id="loginForm" class="flex flex-col space-y-4">-->
+            <!--            <div class="relative flex items-center">-->
+            <!--              <i class="fas fa-user absolute left-3 text-gray-400"></i>-->
+            <!--              <input-->
+            <!--                type="text"-->
+            <!--                placeholder="Username"-->
+            <!--                class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"-->
+            <!--              />-->
+            <!--            </div>-->
+            <!--            <div class="relative flex items-center">-->
+            <!--              <i class="fas fa-lock absolute left-3 text-gray-400"></i>-->
+            <!--              <input-->
+            <!--                type="password"-->
+            <!--                id="loginPassword"-->
+            <!--                placeholder="Password"-->
+            <!--                class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"-->
+            <!--              />-->
+            <!--              <button-->
+            <!--                type="button"-->
+            <!--                onclick="togglePassword('loginPassword')"-->
+            <!--                class="absolute right-3 top-3"-->
+            <!--              >-->
+            <!--                <i class="fas fa-eye" id="loginPasswordIcon"></i>-->
+            <!--              </button>-->
+            <!--            </div>-->
+            <!--            <div class="flex justify-between items-center text-sm">-->
+            <!--              <label class="flex items-center">-->
+            <!--                <input type="checkbox" class="mr-1" />-->
+            <!--                Remember Me-->
+            <!--              </label>-->
+            <!--              <a href="#" class="text-blue-500 hover:underline"-->
+            <!--                >Forgot Password?</a-->
+            <!--              >-->
+            <!--            </div>-->
+            <!--            <button-->
+            <!--              type="submit"-->
+            <!--              class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 transition duration-150"-->
+            <!--            >-->
+            <!--              Sign In-->
+            <!--            </button>-->
+            <!--          </form>-->
+
+
+            <form id="loginForm" class="flex flex-col space-y-4">
+                <div class="relative flex items-center">
+                    <i class="fas fa-user absolute left-3 text-gray-400"></i>
+                    <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Username"
+                            class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+                    />
+                </div>
+                <div class="relative flex items-center">
+                    <i class="fas fa-lock absolute left-3 text-gray-400"></i>
+                    <input
+                            type="password"
+                            id="loginPassword"
+                            name="password"
+                            placeholder="Password"
+                            class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+                    />
+                    <button
+                            type="button"
+                            onclick="togglePassword('loginPassword')"
+                            class="absolute right-3 top-3"
+                    >
+                        <i class="fas fa-eye" id="loginPasswordIcon"></i>
+                    </button>
+                </div>
+                <button
+                        type="submit"
+                        class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 transition duration-150"
+                >
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Register Form -->
+<!--            <form id="registerForm" class="hidden flex flex-col space-y-4">-->
+<!--                <div class="relative flex items-center">-->
+<!--                    <i class="fas fa-envelope absolute left-3 text-gray-400"></i>-->
+<!--                    <input required-->
+<!--                            type="email"-->
+<!--                            placeholder="Email"-->
+<!--                            class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="flex flex-col md:flex-row md:space-x-4">-->
+<!--                    <div class="relative flex-1 flex items-center">-->
+<!--                        <i class="fas fa-user absolute left-3 text-gray-400"></i>-->
+<!--                        <input required-->
+<!--                                type="text"-->
+<!--                                placeholder="Full Name"-->
+<!--                                class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"-->
+<!--                        />-->
+<!--                    </div>-->
+
+<!--                </div>-->
+<!--                <div class="relative flex items-center">-->
+<!--                    <i class="fas fa-lock absolute left-3 text-gray-400"></i>-->
+<!--                    <input required-->
+<!--                            type="password"-->
+<!--                            id="registerPassword"-->
+<!--                            placeholder="Password"-->
+<!--                            class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"-->
+<!--                    />-->
+<!--                    <button-->
+<!--                            type="button"-->
+<!--                            onclick="togglePassword('registerPassword')"-->
+<!--                            class="absolute right-3 top-3"-->
+<!--                    >-->
+<!--                        <i class="fas fa-eye" id="registerPasswordIcon"></i>-->
+<!--                    </button>-->
+<!--                </div>-->
+
+<!--                <button-->
+<!--                        type="submit"-->
+<!--                        class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 transition duration-150"-->
+<!--                >-->
+<!--                    Register-->
+<!--                </button>-->
+<!--            </form>-->
+
+
+
+            <form id="registerForm" class="hidden flex flex-col space-y-4">
+                <div class="relative flex items-center">
+                    <i class="fas fa-envelope absolute left-3 text-gray-400"></i>
+                    <input required
+                           type="email"
+                           name="usernameReg"
+                    placeholder="Email"
+                    class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+                    />
+                </div>
+                <div class="flex flex-col md:flex-row md:space-x-4">
+                    <div class="relative flex-1 flex items-center">
+                        <i class="fas fa-user absolute left-3 text-gray-400"></i>
+                        <input required
+                               type="text"
+                               name="fullName"
+                        placeholder="Full Name"
+                        class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+                        />
+                    </div>
+                </div>
+                <div class="relative flex items-center">
+                    <i class="fas fa-lock absolute left-3 text-gray-400"></i>
+                    <input required
+                           type="password"
+                           name="passwordReg"
+                    id="registerPassword"
+                    placeholder="Password"
+                    class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+                    />
+                    <button
+                            type="button"
+                            onclick="togglePassword('registerPassword')"
+                            class="absolute right-3 top-3"
+                    >
+                        <i class="fas fa-eye" id="registerPasswordIcon"></i>
+                    </button>
+                </div>
+
+                <button
+                        type="submit"
+                        class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 transition duration-150"
+                >
+                    Register
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<script src="./js/sript.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="./js/auth.js"></script>
+
+<!--<script>-->
+<!--    $(document).ready(function () {-->
+<!--        $("#loginForm").on("submit", function (event) {-->
+<!--            event.preventDefault();-->
+<!--            const username = $("#username").val();-->
+<!--            const password = $("#loginPassword").val();-->
+
+<!--            $.ajax({-->
+<!--                url: "/auth/login",-->
+<!--                type: "POST",-->
+<!--                data: {username: username, password: password},-->
+<!--                success: function (response) {-->
+<!--                    alert(response);-->
+<!--                    window.location.href = "/welcome";-->
+<!--                },-->
+<!--                error: function (xhr) {-->
+<!--                    if (xhr.status === 401) {-->
+<!--                        alert("Invalid credentials");-->
+<!--                    }-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+
+
+<!--        $('#registerForm').on('submit', function(event) {-->
+<!--            event.preventDefault(); // Prevent the form from submitting the traditional way-->
+
+<!--            const formData = {-->
+<!--                username: $("input[name='usernameReg']").val(),-->
+<!--                password: $("input[name='passwordReg']").val(),-->
+<!--                fullName: $("input[name='fullName']").val()-->
+<!--            };-->
+
+<!--            $.ajax({-->
+<!--                type: 'POST',-->
+<!--                url: '/auth/registration', // URL of your controller method-->
+<!--                data: formData,-->
+<!--                success: function(response) {-->
+<!--                    alert('Registration completed: ' + response);-->
+<!--                },-->
+<!--                error: function(xhr) {-->
+<!--                    if (xhr.status === 208) {-->
+<!--                        alert('User already exists');-->
+<!--                    } else {-->
+<!--                        alert('An error occurred: ' + xhr.responseText);-->
+<!--                    }-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+
+
+
+<!--        // Check session when the page loads-->
+<!--        $.get("/auth/check-session", function (response) {-->
+<!--            if (response) {-->
+<!--                alert("You are already logged in!");-->
+<!--                // window.location.href = "/";-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+
+<!--    function logout() {-->
+<!--        // Assuming you have a logout endpoint mapped to your login controller-->
+
+<!--        $.post("/auth/logout", function (response) {-->
+<!--            if (response) {-->
+<!--                alert("You are logged out!");-->
+<!--                window.location.href = "/";-->
+<!--            }-->
+<!--        });-->
+<!--        // window.location.href = '/auth/logout'; // Change this to your actual logout URL-->
+<!--    }-->
+
+
+<!--</script>-->
+
+
+</body>
+</html>

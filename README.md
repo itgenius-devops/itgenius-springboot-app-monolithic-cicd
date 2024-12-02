@@ -1,1 +1,1 @@
-# itgenius-springboot-app-monolithic-cicd
+# application-code

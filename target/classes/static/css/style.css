@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif !important;
+}
+
+.community {
+  background: url(../img/bg.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-color: #dfdfdf8a;
+}
+
+.player {
+  background-color: #161626bf;
+}
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple:after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0, 150, 255, 0.5); /* Ripple color */
+  transform: scale(0);
+  animation: ripple-animation 0.6s linear forwards;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+} /* Optional: Customize modal close button */
+#videoModal button {
+  font-size: 1.5rem; /* Adjust size for better visibility */
+}
+
+#videoModal video {
+  border-radius: 0.5rem; /* Rounded corners for the video */
+}
+.swiper-button-next,
+.swiper-button-prev {
+  width: 40px; /* Adjust width */
+  height: 40px; /* Adjust height */
+  color: transparent; /* Hide default arrow color */
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  display: none; /* Hide default arrow icons */
+}
+
+/* Custom button styles */
+.swiper-button-next {
+  right: 20px; /* Adjust position */
+}
+
+.swiper-button-prev {
+  left: 20px; /* Adjust position */
+}
+
+/* Add icon styles if using FontAwesome */
+.swiper-button-next i,
+.swiper-button-prev i {
+  font-size: 20px; /* Adjust icon size */
+}

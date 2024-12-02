@@ -1,0 +1,138 @@
+pipeline {
+    agent any
+    options {
+        timeout(time: 15, unit: 'MINUTES')
+    }
+    parameters {
+        string(name: 'GITHUB_CREDENTIAL', defaultValue: 'github_creds', description: 'Github access credentials id')
+        string(name: 'GITHUB_REPO_URL', defaultValue: 'https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git', description: 'Github repository URL')
+        string(name: 'GITHUB_BRANCH', defaultValue: 'main', description: 'Github branch for your build')
+        string(name: 'SONARQUBE_SERVER_NAME', defaultValue: 'sonarqube_server', description: 'Name for your SonarQube server')
+        string(name: 'NEXUS_URL', defaultValue: 'ec2-44-220-136-131.compute-1.amazonaws.com:8081', description: 'Your Nexus URL')
+        string(name: 'NEXUS_CREDENTIAL', defaultValue: 'nexus_creds', description: 'Your Nexus credentials')
+        string(name: 'REMOTE_USER', defaultValue: 'ec2-user', description: 'Remote server username')
+        string(name: 'MONOLITHIC_SERVER', defaultValue: 'monolithic_server', description: 'The monolithic server Jenkins will SSH into using Publish Over SSH.')
+    }
+
+    environment {
+        REMOTE_USER = "${params.REMOTE_USER}"
+        GITHUB_CREDENTIAL = "${params.GITHUB_CREDENTIAL}"
+        GITHUB_REPO_URL = "${params.GITHUB_REPO_URL}"
+        GITHUB_BRANCH = "${params.GITHUB_BRANCH}"
+        SONARQUBE_SERVER_NAME = "${params.SONARQUBE_SERVER_NAME}"
+        NEXUS_URL = "${params.NEXUS_URL}"
+        NEXUS_CREDENTIAL = "${params.NEXUS_CREDENTIAL}"
+        MONOLITHIC_SERVER = "${params.MONOLITHIC_SERVER}"
+    }
+
+    stages {
+        stage("Validate Parameters") {
+            steps {
+                script {
+                    def requiredParameters = ['REMOTE_USER', 'GITHUB_CREDENTIAL', 'GITHUB_REPO_URL', 'GITHUB_BRANCH']
+                    for (param in requiredParameters) {
+                        if (!params.containsKey(param) || params[param].trim() == "") {
+                            error("Parameter '$param' is missing or empty. Please provide a value.")
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("Checkout Code From GitHub") {
+            steps {
+                git branch: "${GITHUB_BRANCH}", credentialsId: "${GITHUB_CREDENTIAL}", url: "${GITHUB_REPO_URL}"
+            }
+        }
+
+        stage('Application Build And Test') {
+            steps {
+                sh 'chmod +x ./mvnw'
+                sh './mvnw clean install'
+                sh './mvnw test'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv("${SONARQUBE_SERVER_NAME}") {
+                        sh './mvnw sonar:sonar'
+                    }
+                }
+            }
+        }
+
+        stage('Upload Snapshot to Nexus Repository') {
+            steps {
+                script {
+                    def artifactPath = "target/itgenuine-0.0.1-SNAPSHOT.jar"
+                    nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: "${NEXUS_URL}",
+                        groupId: 'com.app',
+                        version: '0.0.1-SNAPSHOT',
+                        repository: 'maven-snapshots',
+                        credentialsId: "${NEXUS_CREDENTIAL}",
+                        artifacts: [[
+                            artifactId: 'itgenuine',
+                            classifier: '',
+                            file: artifactPath,
+                            type: 'jar',
+                            filename: "itgenuine-0.0.1-SNAPSHOT.jar"
+                        ]]
+                    )
+                }
+            }
+        }
+
+        stage('Deploy To Monolithic Server') {
+            steps {
+                script {
+                    def deployCommand = '''
+                        set -ex
+                        mkdir -p ~/itgenius-app/
+                        cd ~/itgenius-app/
+                        nohup java -jar itgenuine-0.0.1-SNAPSHOT.jar > logfile 2>&1 &
+                        sleep 10
+                        if ! pgrep -f "itgenuine-0.0.1-SNAPSHOT.jar" > /dev/null; then
+                            echo "Application failed to start."
+                            exit 1
+                        fi
+                        echo "Application started successfully."
+                        sleep 7
+                        cat logfile
+                    '''
+
+                    sshPublisher(publishers: [sshPublisherDesc(
+                        configName: env.MONOLITHIC_SERVER,
+                        transfers: [
+                            sshTransfer(
+                                sourceFiles: 'target/itgenuine-0.0.1-SNAPSHOT.jar',
+                                removePrefix: 'target/',
+                                makeEmptyDirs: false,
+                                remoteDirectory: '/itgenius-app/',
+                                execTimeout: 120000
+                                
+                            ),
+                            sshTransfer(
+                                sourceFiles: 'monolithic-cicd/.env',
+                                removePrefix: 'monolithic-cicd/',
+                                makeEmptyDirs: false,
+                                remoteDirectory: '/itgenius-app/',
+                                execCommand: deployCommand,
+                                execTimeout: 120000
+                            )
+                        ],
+                        usePromotionTimestamp: false,
+                        useWorkspaceInPromotion: false,
+                        verbose: true
+                    )])
+                }
+            }
+        }
+
+        
+    }
+}

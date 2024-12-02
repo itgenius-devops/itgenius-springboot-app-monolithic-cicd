@@ -1,0 +1,31 @@
+[
+    
+  
+    {
+      "name": "infrastructure-provisioning",
+      "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
+      "branch": "main",
+      "jenkinsfile": "terraform/Jenkinsfile"
+    },
+
+    {
+      "name": "secrets-manager",
+      "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
+      "branch": "main",
+      "jenkinsfile": "secrets-manager/Jenkinsfile"
+    },
+
+    {
+      "name": "ansible",
+      "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
+      "branch": "main",
+      "jenkinsfile": "ansible/Jenkinsfile"
+    },
+
+    {
+      "name": "monolithic-pl",
+      "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
+      "branch": "main",
+      "jenkinsfile": "monolithic-cicd/Jenkinsfile"
+    }
+  ]

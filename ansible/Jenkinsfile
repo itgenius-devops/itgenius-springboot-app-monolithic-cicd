@@ -1,0 +1,85 @@
+pipeline {
+    agent any
+    options {
+        timeout(time: 10, unit: 'MINUTES')
+    }
+
+    parameters {
+        string(name: 'GITHUB_CREDENTIAL', defaultValue: 'github_creds', description: 'Github access credentials id')
+        string(name: 'GITHUB_REPO_URL', defaultValue: 'https://github.com/dkojo/itgenius-springbootapp-cicd.git', description: 'Github repository url')
+        string(name: 'GITHUB_BRANCH', defaultValue: 'main', description: 'Github branch for your build')
+        string(name: 'SSH_SERVER', defaultValue: 'ansible_server', description: 'The server that Jenkins will SSH into Using Publish Over SSH.')
+    }
+
+    environment {
+        GITHUB_CREDENTIAL = "${params.GITHUB_CREDENTIAL}"
+        GITHUB_REPO_URL = "${params.GITHUB_REPO_URL}"
+        GITHUB_BRANCH = "${params.GITHUB_BRANCH}"
+        SSH_SERVER = "${params.SSH_SERVER}"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                script {
+                    git branch: "${GITHUB_BRANCH}", credentialsId: "${GITHUB_CREDENTIAL}", url: "${GITHUB_REPO_URL}"
+                }
+            }
+        }
+
+        stage('Copy Ansible Files') {
+            steps {
+                script {
+                   sshPublisher(publishers: [sshPublisherDesc(
+                       configName: env.SSH_SERVER,
+                       transfers: [sshTransfer(
+                           sourceFiles: 'ansible/packages1.yml, ansible/packages2.yml, ansible/hosts',
+                           removePrefix: 'ansible/',
+                           makeEmptyDirs: false,
+                           remoteDirectory: '/ansible-files/'
+                    )],
+                       usePromotionTimestamp: false,
+                       useWorkspaceInPromotion: false,
+                       verbose: true,
+                       
+                )]
+            )
+        }
+    }
+}
+
+    
+        stage('Deploy To Remote Server') {
+            steps {
+                script {
+                   def deployCommand = '''
+    cd /home/ec2-user/ansible-files 
+    sudo cp * /etc/ansible/
+    cd /etc/ansible
+    sudo ansible-playbook -i hosts packages1.yml packages2.yml
+'''
+
+                    sshPublisher(publishers: [sshPublisherDesc(
+                        configName: env.SSH_SERVER,
+                        transfers: [sshTransfer(
+                            cleanRemote: false,
+                            execCommand: deployCommand,
+                            execTimeout: 120000,
+                            flatten: false,
+                            makeEmptyDirs: false,
+                            noDefaultExcludes: false,
+                            patternSeparator: '[, ]+',
+                            remoteDirectory: '',
+                            remoteDirectorySDF: false,
+                            removePrefix: '',
+                            sourceFiles: ''
+                        )],
+                        usePromotionTimestamp: false,
+                        useWorkspaceInPromotion: false,
+                        verbose: true
+                    )])
+                }
+            }
+        }
+    }
+}

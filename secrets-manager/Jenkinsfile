@@ -1,0 +1,67 @@
+pipeline {
+	agent any
+	options {
+		buildDiscarder(logRotator(numToKeepStr:'5'))
+		timeout(time: 15, unit: 'MINUTES')
+		timestamps()
+	}
+	parameters {
+    choice(name: "Action", choices: "Select\ncreate\nupdate", description: "Please select create or update")
+		string(name: "SecretName", description: "Enter the Name of the Secret You want to Create or Update.")
+	}
+	environment {
+		ENV              = "${params.Product_Account}"
+		ACTION           = "${params.Action}"
+		SECRET_NAME      = "${params.SecretName}"
+		AWS_REGION       = "us-east-1"
+	}
+
+	stages {
+        stage("Setting Environment") {
+            steps {
+                script {
+                    currentBuild.description = "Secrets Management: ${SECRET_NAME}"
+                }
+            }
+        }
+        stage ('Input Secrets') {
+            steps {
+                script {
+                    // Prompt for multiple key-value pairs, separated by commas, to form the secret JSON
+                    def secretInput = input(
+                        message: 'Enter secrets as key:value pairs, separated by commas (e.g., username:dummyuser,password:dummypassword)',
+                        parameters: [string(name: 'KeyValuePairs', description: 'Enter the key-value pairs')]
+                    )
+
+                    // Convert the input string into a JSON format for Secrets Manager
+                    def secretMap = secretInput.tokenize(',').collectEntries { entry ->
+                        def pair = entry.tokenize(':')
+                        [(pair[0].trim()): pair[1].trim()]
+                    }
+                    def secretJSON = groovy.json.JsonOutput.toJson(secretMap)
+
+                    // Write the secrets to a temporary file
+                    writeFile file: 'secret.json', text: secretJSON
+                }
+            }
+        }
+        stage ('Manage Secrets') {
+            steps {
+                script {
+                    echo "Managing secrets in AWS Secrets Manager"
+                    
+                    // Determine whether to create or update the secret
+                    def awsCommand = "${ACTION}" == 'create' ? 
+                        "aws secretsmanager create-secret --tags Key=Name,Value=\"${SECRET_NAME}\" --name \"${SECRET_NAME}\" --description \"Managed secret\" --secret-string file://secret.json" : 
+                        "aws secretsmanager update-secret --secret-id \"${SECRET_NAME}\" --description \"Managed secret\" --secret-string file://secret.json"
+
+                        sh """
+                            ${awsCommand}
+                        """
+                    // Remove the temporary file after the command executes
+                    sh "rm -f secret.json"
+                }
+            }
+        }
+    }
+}

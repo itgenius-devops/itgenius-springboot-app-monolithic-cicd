@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./input.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/responsive.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+    <title>It Genius</title>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="w-full z-[100] fixed top-0">
+      <div class="bg-[#5700FC] py-3 text-white text-sm font-medium">
+        <div class="container mx-auto px-5 lg:px-10">
+          <div class="flex justify-end md:justify-between">
+            <ul class="hidden md:flex gap-5">
+              <li>
+                <a href="/" class="hover:text-[#72E7FE] duration-150">
+                  <i class="fa-solid fa-location-dot mr-2"></i>
+                  Colfax,NC
+                </a>
+              </li>
+              <li>
+                <a href="/" class="hover:text-[#72E7FE] duration-150">
+                  <i class="fa-solid fa-envelope mr-2"></i>
+                  info@itgenius.io
+                </a>
+              </li>
+              <li>
+                <a href="/" class="hover:text-[#72E7FE] duration-150">
+                  <i class="fa-solid fa-headset mr-2"></i>
+                  24/7 Customer Support
+                </a>
+              </li>
+            </ul>
+            <ul class="flex gap-5 cursor-pointer">
+              <li sec:authorize="isAuthenticated()" onclick="logout()">Logout</li>
+              <li sec:authorize="!isAuthenticated()" onclick="openLoginModal()">Login</li>
+              <li onclick="openRegisterModal()">Register</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white py-2">
+        <div class="container mx-auto px-4 lg:px-10">
+          <div class="block md:flex justify-between items-center">
+            <div class="flex justify-between items-center">
+              <a href="/">
+                <img
+                  src="./img/logo.webp"
+                  alt=""
+                  class="w-[165px] lg:w-[210px]"
+                />
+              </a>
+              <button
+                onclick="navFun()"
+                id="navbtn"
+                class="block md:hidden bg-[#0096FF] text-white px-2 py-1 rounded"
+              >
+                <i class="fa-solid fa-bars"></i>
+              </button>
+            </div>
+            <div id="nav" class="hidden md:block">
+              <ul
+                class="block md:flex gap-2 mt-4 md:mt-0 divide-y md:divide-y-0 font-medium text-sm"
+              >
+                <li>
+                  <a
+                    href="/"
+                    class="block md:inline-block bg-[#0096FF] text-white px-4 lg:px-7 py-3 lg:py-4 duration-150"
+                  >
+                    HOME
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/"
+                    class="block md:inline-block hover:bg-[#0096FF] hover:text-white px-4 lg:px-7 py-3 lg:py-4 duration-150"
+                  >
+                    ABOUT US
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/"
+                    class="block md:inline-block hover:bg-[#0096FF] hover:text-white px-4 lg:px-7 py-3 lg:py-4 duration-150"
+                  >
+                    FAQ
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/"
+                    class="block md:inline-block hover:bg-[#0096FF] hover:text-white px-4 lg:px-7 py-3 lg:py-4 duration-150"
+                  >
+                    TESTIMONIAL
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/"
+                    class="block md:inline-block hover:bg-[#0096FF] hover:text-white px-4 lg:px-7 py-3 lg:py-4 duration-150"
+                  >
+                    CONTACT US
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="mt-20"></div>
+    <section
+      class="w-full h-screen bg-gradient-to-r from-[#f0f4ff] to-[#e2e8f0] flex items-center justify-center text-gray-800"
+    >
+      <div class="container mx-auto px-5 lg:px-10 text-center">
+        <img
+          src="./img/logo.webp"
+          alt="Logo"
+          class="mx-auto w-[165px] lg:w-[210px] mb-6"
+        />
+        <h1 class="text-3xl lg:text-4xl font-bold mb-4">Congratulations!</h1>
+        <p class="text-lg lg:text-xl font-medium">
+          You have successfully logged in.
+        </p>
+        <a
+          href="/"
+          class="mt-8 inline-block bg-[#5700FC] text-white px-8 py-3 rounded-full hover:bg-[#72E7FE] duration-150"
+        >
+          Go to Dashboard
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="bg-white py-10 md:py-[80px]">
+        <div class="container mx-auto px-4 lg:px-10">
+          <div class="grid md:grid-cols-3 gap-8">
+            <div>
+              <a href="/">
+                <img
+                  src="./img/logo.webp"
+                  alt="Logo"
+                  class="w-[165px] lg:w-[210px] mb-4"
+                />
+              </a>
+              <p class="text-[#515151] text-sm pr-4 leading-[28.8px]">
+                Over 10 years of experience and knowledge of international
+                standards, technological changes, and industrial systems.
+              </p>
+            </div>
+            <div>
+              <h1 class="text-[18px] font-medium mb-3">MENU</h1>
+              <i class="fa-solid fa-ellipsis mt-2 mb-5"></i>
+              <ul>
+                <li>
+                  <a
+                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                    href="/"
+                    >HOME</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                    href="/"
+                    >ABOUT US</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                    href="/"
+                    >FAQ</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                    href="/"
+                    >TESTIMONIAL</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                    href="/"
+                    >CONTACT US</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h1 class="text-[18px] font-medium mb-3">SOCIAL</h1>
+              <i class="fa-solid fa-ellipsis mt-2 mb-5"></i>
+              <ul>
+                <li>
+                  <a
+                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                    href="/"
+                  >
+                    <i
+                      class="fa-solid fa-location-dot mr-2 text-[#0096FF] text-xl"
+                    ></i>
+                    Colfax, NC 27235
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                    href="/"
+                  >
+                    <i
+                      class="fa-solid fa-envelope mr-2 text-[#0096FF] text-xl"
+                    ></i>
+                    info@itgenius.io
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="mb-3 block text-[#515151] hover:text-[#0096FF] duration-150"
+                    href="/"
+                  >
+                    <i
+                      class="fa-solid fa-phone mr-2 text-[#0096FF] text-xl"
+                    ></i>
+                    +1(336)340-7953
+                  </a>
+                </li>
+              </ul>
+              <div class="flex mt-5 gap-3">
+                <a
+                  href="/"
+                  class="px-3 py-2 text-white bg-[#0096FF] hover:bg-[#6A1FA2] duration-150"
+                >
+                  <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a
+                  href="/"
+                  class="px-4 py-2 text-white bg-[#0096FF] hover:bg-[#6A1FA2] duration-150"
+                >
+                  <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                <a
+                  href="/"
+                  class="px-3 py-2 text-white bg-[#0096FF] hover:bg-[#6A1FA2] duration-150"
+                >
+                  <i class="fa-brands fa-twitter"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-[#0096FF] py-5">
+        <div class="container mx-auto px-4 lg:px-10 text-center text-white">
+          <p class="text-sm">© 2023 IT Genius. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Modal -->
+    <div
+      id="authModal"
+      class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-70 z-[999] p-4"
+      onclick="closeAuthModal()"
+    >
+      <div
+        class="relative bg-white rounded-lg shadow-lg overflow-hidden max-w-lg w-full p-6"
+        onclick="event.stopPropagation();"
+      >
+        <button
+          onclick="closeAuthModal()"
+          class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 transition"
+        >
+          ✖
+        </button>
+        <div class="flex justify-center mb-4">
+          <img src="./img/logo.webp" alt="Brand Logo" class="h-12" />
+        </div>
+        <div class="tabs flex justify-between border-b border-gray-300 mb-4">
+          <button
+            id="loginTab"
+            class="tab-button flex-1 text-gray-600 py-3 font-semibold transition-colors duration-200 border-b-4 border-transparent hover:bg-blue-700 hover:text-white"
+            onclick="showLoginForm()"
+          >
+            Login
+          </button>
+          <button
+            id="registerTab"
+            class="tab-button flex-1 text-gray-600 py-3 font-semibold transition-colors duration-200 border-b-4 border-transparent hover:bg-blue-700 hover:text-white"
+            onclick="showRegisterForm()"
+          >
+            Register
+          </button>
+        </div>
+        <div
+          id="authForm"
+          class="flex flex-col space-y-4 max-h-[60vh] overflow-y-auto"
+        >
+          <!-- Login Form -->
+          <form id="loginForm" class="flex flex-col space-y-4">
+            <div class="relative flex items-center">
+              <i class="fas fa-user absolute left-3 text-gray-400"></i>
+              <input
+                type="text"
+                placeholder="Username"
+                class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+              />
+            </div>
+            <div class="relative flex items-center">
+              <i class="fas fa-lock absolute left-3 text-gray-400"></i>
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password"
+                class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+              />
+              <button
+                type="button"
+                onclick="togglePassword('loginPassword')"
+                class="absolute right-3 top-3"
+              >
+                <i class="fas fa-eye" id="loginPasswordIcon"></i>
+              </button>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <label class="flex items-center">
+                <input type="checkbox" class="mr-1" />
+                Remember Me
+              </label>
+              <a href="#" class="text-blue-500 hover:underline"
+                >Forgot Password?</a
+              >
+            </div>
+            <button
+              type="submit"
+              class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 transition duration-150"
+            >
+              Sign In
+            </button>
+          </form>
+
+          <!-- Register Form -->
+          <form id="registerForm" class="hidden flex flex-col space-y-4">
+            <div class="relative flex items-center">
+              <i class="fas fa-envelope absolute left-3 text-gray-400"></i>
+              <input
+                type="email"
+                placeholder="Email"
+                class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+              />
+            </div>
+            <div class="flex flex-col md:flex-row md:space-x-4">
+              <div class="relative flex-1 flex items-center">
+                <i class="fas fa-user absolute left-3 text-gray-400"></i>
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+                />
+              </div>
+              <div class="relative flex-1 flex items-center">
+                <i class="fas fa-user absolute left-3 text-gray-400"></i>
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+                />
+              </div>
+            </div>
+            <div class="relative flex items-center">
+              <i class="fas fa-lock absolute left-3 text-gray-400"></i>
+              <input
+                type="password"
+                id="registerPassword"
+                placeholder="Password"
+                class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+              />
+              <button
+                type="button"
+                onclick="togglePassword('registerPassword')"
+                class="absolute right-3 top-3"
+              >
+                <i class="fas fa-eye" id="registerPasswordIcon"></i>
+              </button>
+            </div>
+            <div class="relative flex items-center">
+              <i class="fas fa-lock absolute left-3 text-gray-400"></i>
+              <input
+                type="password"
+                id="registerConfirmPassword"
+                placeholder="Confirm Password"
+                class="border border-gray-300 p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+              />
+              <button
+                type="button"
+                onclick="togglePassword('registerConfirmPassword')"
+                class="absolute right-3 top-3"
+              >
+                <i class="fas fa-eye" id="registerConfirmPasswordIcon"></i>
+              </button>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="terms" class="mr-2" />
+              <label for="terms" class="text-gray-600 font-semibold text-sm">
+                I accept the Terms of Service and Privacy Policy
+              </label>
+            </div>
+            <button
+              type="submit"
+              class="w-full bg-blue-500 text-white py-3 rounded hover:bg-blue-600 transition duration-150"
+            >
+              Register
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="./js/sript.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./js/auth.js"></script>
+  </body>
+</html>
