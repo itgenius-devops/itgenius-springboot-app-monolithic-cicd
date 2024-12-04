@@ -23,7 +23,7 @@
     },
 
     {
-      "name": "monolithic-pl",
+      "name": "continuous-integration-continuous-deployment",
       "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
       "branch": "main",
       "jenkinsfile": "monolithic-cicd/Jenkinsfile"
