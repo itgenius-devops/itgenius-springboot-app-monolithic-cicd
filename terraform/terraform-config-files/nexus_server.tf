@@ -8,4 +8,10 @@ resource "aws_instance" "nexus_server" {
   tags = {
     Name = "nexus_server"
   }
+  user_data = <<-EOF
+    #!/bin/bash
+    # Set the hostname
+    hostnamectl set-hostname nexus_server
+  EOF
+
 }
