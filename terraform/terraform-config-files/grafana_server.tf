@@ -9,4 +9,10 @@ resource "aws_instance" "grafana_server" {
   tags = {
     Name = "grafana_server"
   }
+
+  user_data = <<-EOF
+    #!/bin/bash
+    # Set the hostname
+    hostnamectl set-hostname grafana_server
+  EOF
 }
