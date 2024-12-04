@@ -9,4 +9,9 @@ resource "aws_instance" "sonarqube_server" {
   tags = {
     Name = "sonarqube_server"
   }
+  user_data = <<-EOF
+      #!/bin/bash
+      # Set the hostname
+      hostnamectl set-hostname sonarqube_server
+    EOF
 }
