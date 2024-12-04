@@ -9,4 +9,9 @@ resource "aws_instance" "prometheus_server" {
   tags = {
     Name = "prometheus_server"
   }
+  user_data = <<-EOF
+      #!/bin/bash
+      # Set the hostname
+      hostnamectl set-hostname prometheus_server
+    EOF
 }
