@@ -9,4 +9,9 @@ resource "aws_instance" "monolithic_server" {
   tags = {
     Name = "monolithic_server"
   }
+  user_data = <<-EOF
+      #!/bin/bash
+      # Set the hostname
+      hostnamectl set-hostname monolithic_server
+    EOF
 }
