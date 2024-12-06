@@ -21,7 +21,7 @@ variable "instance_ami" {
 
 variable "instance_key_name" {
   description = "An Existing Keypair to be used for the instances"
-  default     = "lappy-jenkins"
+  default     = "ITG"
 }
 
 variable "instance_subnet_id" {
@@ -65,10 +65,10 @@ variable "db_engine_version" {
 
 variable "s3_bucket_name" {
   description = "The name of the S3 bucket for Terraform state"
-  default     = "itgenius-springboot-app-s3-bucket"
+  default     = "itgenius-s3-bucket"
 }
 
 variable "dynamodb_table_name" {
   description = "The name of the DynamoDB table for Terraform state locking"
-  default     = "itgenius-springboot-app-dynamoDB"
+  default     = "itgenius-dynamoDB"
 }
