@@ -1,10 +1,10 @@
 [jenkins]
-18.206.168.37 ansible_ssh_user=ec2-user ansible_private_key_file=project-key ## Jenkins_server
+34.201.63.30 ansible_ssh_user=ec2-user ansible_private_key_file=project-key ## Jenkins_server
 
 [servers]
-34.234.97.48 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
+54.173.55.78 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
 ##10.0.13.68 ansible_ssh_user=ec2-user ansible_private_key_file=project-key  ## Nexus_server
-54.167.106.115 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Sonarqube_server
+54.226.109.251 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Sonarqube_server
 ##3.82.6.109 ansible_ssh_user=ec2-user ansible_private_key_file=project-key      ## Microservice_server
 ##107.22.48.242 ansible_ssh_user=ec2-user ansible_private_key_file=project-key     ## Prometheus_server
 ##3.89.135.195 ansible_ssh_user=ec2-user ansible_private_key_file=project-key    ## Grafana_server
