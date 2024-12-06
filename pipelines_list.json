@@ -16,7 +16,7 @@
     },
 
     {
-      "name": "ansible",
+      "name": "infrastructure-configuration",
       "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
       "branch": "main",
       "jenkinsfile": "ansible/Jenkinsfile"
