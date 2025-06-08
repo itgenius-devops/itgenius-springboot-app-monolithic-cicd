@@ -10,7 +10,6 @@ pipeline {
 		string(name: "SecretName", description: "Enter the Name of the Secret You want to Create or Update.")
 	}
 	environment {
-		ENV              = "${params.Product_Account}"
 		ACTION           = "${params.Action}"
 		SECRET_NAME      = "${params.SecretName}"
 		AWS_REGION       = "us-east-1"
