@@ -45,7 +45,7 @@ pipeline {
                 }
             }
         }
-        stage ('Manage Secrets') {
+        stage ('Create/Update Secrets') {
             steps {
                 script {
                     echo "Managing secrets in AWS Secrets Manager"
