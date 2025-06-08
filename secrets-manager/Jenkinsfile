@@ -48,7 +48,7 @@ pipeline {
         stage ('Create/Update Secrets') {
             steps {
                 script {
-                    echo "Managing secrets in AWS Secrets Manager"
+                    echo "Creating/Updating the secrets in AWS Secrets Manager"
                     
                     // Determine whether to create or update the secret
                     def awsCommand = "${ACTION}" == 'create' ? 
