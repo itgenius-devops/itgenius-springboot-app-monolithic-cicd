@@ -26,7 +26,6 @@ pipeline {
         stage ('Input Secrets') {
             steps {
                 script {
-                    // Prompt for multiple key-value pairs, separated by commas, to form the secret JSON
                     def secretInput = input(
                         message: 'Enter secrets as key:value pairs, separated by commas (e.g., username:dummyuser,password:dummypassword)',
                         parameters: [string(name: 'KeyValuePairs', description: 'Enter the key-value pairs')]

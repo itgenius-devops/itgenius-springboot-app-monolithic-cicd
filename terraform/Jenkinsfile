@@ -7,9 +7,8 @@ pipeline {
     parameters {
         string(name: 'GITHUB_CREDENTIAL', defaultValue: 'github_creds', description: 'Github access credentials id')
         string(name: 'GITHUB_REPO_URL', defaultValue: 'https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git', description: 'Github repository url')
-        string(name: 'GITHUB_BRANCH', defaultValue: 'main', description: 'Github branch for your build')
+        string(name: 'GITHUB_BRANCH', defaultValue: 'main', description: 'Github branch where the Terraform code is located')
         choice(name: 'TERRAFORM_ACTION', choices: ['', 'apply', 'destroy'], description: 'Select Terraform action: Apply or Destroy')
-        string(name: 'AWS_CREDENTIAL_ID', defaultValue: 'aws_creds', description: 'AWS credentials id')
     }
 
     environment {
@@ -44,9 +43,7 @@ pipeline {
                 script {
                     // Change into the Terraform code directory
                     dir("${WORKSPACE}/terraform/terraform-config-files") {
-                         withCredentials([aws(credentialsId: "${AWS_CREDENTIAL_ID}", accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                            sh 'terraform init'
-                        }
+                            sh 'terraform init'                       
                     }
                 }
             }
@@ -56,9 +53,7 @@ pipeline {
             steps {
                 script {
                     dir("${WORKSPACE}/terraform/terraform-config-files") {
-                         withCredentials([aws(credentialsId: "${AWS_CREDENTIAL_ID}", accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                            sh 'terraform plan'
-                        }
+                            sh 'terraform plan'                       
                     }
                 }
             }
@@ -67,10 +62,25 @@ pipeline {
         stage('Terraform Apply Or Destroy') {
             steps {
                 script {
+                    echo """
+                    #################################################################
+                    #                                                               #
+                    #                  USER APPROVAL REQUIRED !!!                   #
+                    #                                                               #
+                    # 1. Please verify the action you selected: ${TERRAFORM_ACTION} #     
+                    # 2. Ensure all configurations and the Terraform plan           #
+                    #    have been thoroughly reviewed.                             #
+                    # 3. This operation will execute: terraform ${TERRAFORM_ACTION} #     
+                    #                                                               #
+                    #             Press 'Yes, Proceed' to continue.                 #
+                    #################################################################
+                    """
+                    timeout(time: 10, unit: 'MINUTES') {
+                        input message: "Have you reviewed the Terraform plan and wish to proceed with '${TERRAFORM_ACTION}'?", ok: "Yes, Proceed"
+                    }
+
                     dir("${WORKSPACE}/terraform/terraform-config-files") {
-                         withCredentials([aws(credentialsId: "${AWS_CREDENTIAL_ID}", accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                            sh 'terraform "${TERRAFORM_ACTION}" -auto-approve'
-                        }
+                        sh "terraform ${TERRAFORM_ACTION}"
                     }
                 }
             }

@@ -11,59 +11,62 @@ resource "aws_instance" "ansible_server" {
   }
 
   user_data = <<-EOF
-    #!/bin/bash
-    # Set the hostname
-    hostnamectl set-hostname ansible_server
+  #!/bin/bash
+  exec > >(tee -a /var/log/ansible_user_data.log) 2>&1
 
-    # Update the system
-    yum update -y
+  # Set the hostname
+  hostnamectl set-hostname ansible_server
 
-    # Install Python 3.11
-    yum install -y python3.11
+  # Update the system
+  yum update -y
 
-    # Verify Python installation (optional, for debug purposes)
-    python3.11 --version
+  # Install Python 3.11
+  yum install -y python3.11
 
-    # Install pip for Python 3.11
-    yum install -y python3.11-pip
+  # Verify Python installation
+  python3.11 --version
 
-    # Verify pip installation (optional, for debug purposes)
-    pip3.11 --version
+  # Install pip for Python 3.11
+  yum install -y python3.11-pip
 
-    # Install Ansible
-    pip3.11 install ansible
+  # Verify pip installation
+  pip3.11 --version
 
-    # Verify Ansible installation (optional, for debug purposes)
-    ansible --version
+  # Install Ansible
+  pip3.11 install ansible
 
-    # Install additional dependencies for AWS modules (optional)
-    pip3.11 install boto3 botocore
+  # Verify Ansible installation
+  ansible --version
 
-    # Create /etc/ansible directory
-    mkdir -p /etc/ansible
+  # Install additional dependencies for AWS modules
+  pip3.11 install boto3 botocore
 
-    # Create Ansible configuration file
-    cat <<EOC > /etc/ansible/ansible.cfg
-    [defaults]
-    inventory = /etc/ansible/hosts
-    remote_user = ec2-user
-    log_path = /etc/ansible/ansible.log
-    EOC
+  # Create /etc/ansible directory
+  mkdir -p /etc/ansible
 
-    # Create Ansible hosts file
-    cat <<EOH > /etc/ansible/hosts
-    [jenkins]
-    54.92.174.9 ansible_ssh_user=ec2-user ansible_private_key_file=project-key ## Jenkins_server
+  # Create Ansible configuration file
+  cat <<EOC > /etc/ansible/ansible.cfg
+  [defaults]
+  inventory = /etc/ansible/hosts
+  remote_user = ec2-user
+  log_path = /etc/ansible/ansible.log
+  EOC
 
-    [servers]
-    35.171.187.34 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
-    54.210.119.130 ansible_ssh_user=ec2-user ansible_private_key_file=project-key  ## Nexus_server
-    54.226.121.37 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Sonarqube_server
-    54.84.79.83 ansible_ssh_user=ec2-user ansible_private_key_file=project-key     ## Prometheus_server
-    3.89.135.195 ansible_ssh_user=ec2-user ansible_private_key_file=project-key    ## Grafana_server
-    EOH
+  # Create Ansible hosts file
+  cat <<EOH > /etc/ansible/hosts
+  [jenkins]
+  54.92.174.9 ansible_ssh_user=ec2-user ansible_private_key_file=project-key ## Jenkins_server
 
-    # Test Ansible installation
-    ansible localhost -m ping > /tmp/ansible_test.log
-  EOF
+  [servers]
+  35.171.187.34 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
+  54.210.119.130 ansible_ssh_user=ec2-user ansible_private_key_file=project-key  ## Nexus_server
+  54.226.121.37 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Sonarqube_server
+  54.84.79.83 ansible_ssh_user=ec2-user ansible_private_key_file=project-key     ## Prometheus_server
+  3.89.135.195 ansible_ssh_user=ec2-user ansible_private_key_file=project-key    ## Grafana_server
+  EOH
+
+  # Test Ansible installation
+  ansible localhost -m ping
+EOF
+
 }

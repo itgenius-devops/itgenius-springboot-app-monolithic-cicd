@@ -12,3 +12,29 @@ output "security_group_id" {
   description = "The security group ID for the RDS instance"
   value       = aws_security_group.itgenius_sg.id
 }
+
+output "prometheus_server_public_ip" {
+  description = "The public IP address of the Prometheus server"
+  value       = aws_instance.prometheus_server.public_ip
+}
+
+output "grafana_server_public_ip" {
+  description = "The public IP address of the Grafana server"
+  value       = aws_instance.grafana_server.public_ip
+}
+
+output "monolithic_server_public_ip" {
+  description = "The public IP address of the Monolithic server"
+  value       = aws_instance.monolithic_server.public_ip
+}
+
+output "nexus_server_public_ip" {
+  description = "The public IP address of the Nexus server"
+  value       = aws_instance.nexus_server.public_ip
+}
+
+output "sonarqube_server_public_ip" {
+  description = "The public IP address of the SonarQube server"
+  value       = aws_instance.sonarqube_server.public_ip
+}
+
