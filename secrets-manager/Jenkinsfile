@@ -50,8 +50,8 @@ pipeline {
                     
                     // Determine whether to create or update the secret
                     def awsCommand = "${ACTION}" == 'create' ? 
-                        "aws secretsmanager create-secret --tags Key=Name,Value=\"${SECRET_NAME}\" --name \"${SECRET_NAME}\" --description \"Managed secret\" --secret-string file://secret.json" : 
-                        "aws secretsmanager update-secret --secret-id \"${SECRET_NAME}\" --description \"Managed secret\" --secret-string file://secret.json"
+                        "aws secretsmanager create-secret --region ${AWS_REGION} --tags Key=Name,Value=\"${SECRET_NAME}\" --name \"${SECRET_NAME}\" --description \"Managed secret\" --secret-string file://secret.json" : 
+                        "aws secretsmanager update-secret --region ${AWS_REGION} --secret-id \"${SECRET_NAME}\" --description \"Managed secret\" --secret-string file://secret.json"
 
                         sh """
                             ${awsCommand}
