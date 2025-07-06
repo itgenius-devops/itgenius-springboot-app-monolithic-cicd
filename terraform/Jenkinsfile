@@ -16,7 +16,6 @@ pipeline {
         GITHUB_REPO_URL = "${params.GITHUB_REPO_URL}"
         GITHUB_BRANCH = "${params.GITHUB_BRANCH}"
         TERRAFORM_ACTION = "${params.TERRAFORM_ACTION}"
-        AWS_CREDENTIAL_ID = "${params.AWS_CREDENTIAL_ID}"
     }
 
     stages {
