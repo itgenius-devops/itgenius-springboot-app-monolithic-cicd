@@ -50,9 +50,10 @@ variable "db_name" {
   default     = "itgeniusdb"
 }
 
-variable "db_username" {
-  description = "Master username for the database"
-  default     = "itgeniusmaster"
+variable "db_instance_class" {
+  description = "The instance class for the RDS database"
+  type        = string
+  default     = "db.t3.micro"
 }
 
 variable "db_engine_version" {
