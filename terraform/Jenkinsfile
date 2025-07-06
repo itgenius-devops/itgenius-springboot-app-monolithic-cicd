@@ -79,7 +79,7 @@ pipeline {
                     }
 
                     dir("${WORKSPACE}/terraform/terraform-config-files") {
-                        sh "terraform ${TERRAFORM_ACTION}"
+                        sh "terraform ${TERRAFORM_ACTION} -auto-approve"
                     }
                 }
             }
