@@ -1,7 +1,6 @@
 data "aws_secretsmanager_secret" "db_secret" {
-name = "itgenius-standalone-db-secret" # Replace with the name or ARN of your secret
+  name = var.db_secret_name
 }
-
 
 data "aws_secretsmanager_secret_version" "db_secret_version" {
   secret_id = data.aws_secretsmanager_secret.db_secret.id
@@ -10,7 +9,6 @@ data "aws_secretsmanager_secret_version" "db_secret_version" {
 locals {
   db_credentials = jsondecode(data.aws_secretsmanager_secret_version.db_secret_version.secret_string)
 }
-
 
 
 # RDS MySQL Aurora Instance

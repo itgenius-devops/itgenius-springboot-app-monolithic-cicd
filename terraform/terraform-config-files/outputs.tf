@@ -38,3 +38,17 @@ output "sonarqube_server_public_ip" {
   value       = aws_instance.sonarqube_server.public_ip
 }
 
+output "db_instance_endpoint" {
+  description = "The connection endpoint for the RDS instance"
+  value       = aws_db_instance.itgenius_instance.endpoint
+}
+
+output "db_instance_port" {
+  description = "The port of the RDS instance"
+  value       = aws_db_instance.itgenius_instance.port
+}
+
+output "db_instance_address" {
+  description = "The DNS address of the RDS instance"
+  value       = aws_db_instance.itgenius_instance.address
+}
