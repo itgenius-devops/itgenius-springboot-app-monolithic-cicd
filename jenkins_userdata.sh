@@ -57,4 +57,14 @@ terraform -v
 
 ln -s /usr/local/bin/terraform /usr/bin/terraform
 
+#Install python 3.8
+sudo yum install gcc openssl-devel bzip2-devel libffi-devel -y
+cd /usr/src
+sudo curl -O https://www.python.org/ftp/python/3.8.18/Python-3.8.18.tgz
+sudo tar xzf Python-3.8.18.tgz
+cd Python-3.8.18
+sudo ./configure --enable-optimizations
+sudo make altinstall
+
+
 echo "==== Userdata setup complete ===="
