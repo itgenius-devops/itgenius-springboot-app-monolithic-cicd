@@ -23,29 +23,17 @@
   hosts: jenkins
   become: yes
   tasks:
-    - name: Check if HashiCorp repository exists
-      shell: "yum repolist | grep -qw hashicorp"
-      register: hashicorp_repo
-      ignore_errors: yes
-
-    - name: Disable HashiCorp repository temporarily
-      command: "yum-config-manager --disable hashicorp"
-      when: hashicorp_repo.rc == 0
-
     - name: Install Maven using yum
-      yum:
-        name: maven
-        state: present
+      command: yum install -y maven
 
     - name: Install Git
-      yum:
-        name: git
-        state: present
+      command: yum install -y git
 
     - name: Install Docker
-      yum:
-        name: docker
-        state: present
+      command: yum install -y docker
+
+    - name: Install MySQL client
+      command: yum install -y mysql
 
     - name: Start Docker service
       systemd:
