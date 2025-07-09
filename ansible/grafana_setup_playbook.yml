@@ -1,0 +1,56 @@
+---
+- name: Deploy Grafana in Docker
+  hosts: grafana
+  become: yes
+  vars:
+    grafana_container_name: grafana
+    grafana_image: grafana/grafana:10.4.1
+    grafana_port: 3000
+    grafana_data_dir: /opt/grafana-data
+
+  tasks:
+    - name: Install Docker
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create Grafana data directory
+      file:
+        path: "{{ grafana_data_dir }}"
+        state: directory
+        owner: 472  # Grafana runs as UID 472
+        group: 472
+        mode: '0755'
+
+    - name: Run Grafana container
+      docker_container:
+        name: "{{ grafana_container_name }}"
+        image: "{{ grafana_image }}"
+        ports:
+          - "{{ grafana_port }}:3000"
+        volumes:
+          - "{{ grafana_data_dir }}:/var/lib/grafana"
+        restart_policy: always
+        state: started
+
+    - name: Install firewalld
+      dnf:
+        name: firewalld
+        state: present
+
+    - name: Ensure firewalld is running and enabled
+      systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Open Grafana port using shell command
+      shell: |
+        firewall-cmd --permanent --add-port={{ grafana_port }}/tcp
+        firewall-cmd --reload
