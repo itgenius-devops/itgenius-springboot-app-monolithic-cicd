@@ -13,6 +13,9 @@
         name: git
         state: present
 
+    - name: Install MySQL client
+      command: yum install -y mysql
+
     - name: Install Docker
       dnf:
         name: docker
