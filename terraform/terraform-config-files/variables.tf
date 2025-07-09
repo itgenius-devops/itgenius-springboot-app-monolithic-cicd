@@ -16,7 +16,7 @@ variable "subnet_ids" {
 
 variable "instance_ami" {
   description = "AMI ID for the instances"
-  default     = "ami-0ec18f6103c5e0491"
+  default     = "ami-05ffe3c48a9991133"
 }
 
 variable "db_secret_name" {

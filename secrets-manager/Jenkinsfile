@@ -1,21 +1,22 @@
 pipeline {
-	agent any
-	options {
-		buildDiscarder(logRotator(numToKeepStr:'5'))
-		timeout(time: 15, unit: 'MINUTES')
-		timestamps()
-	}
-	parameters {
-    choice(name: "Action", choices: "Select\ncreate\nupdate", description: "Please select create or update")
-		string(name: "SecretName", description: "Enter the Name of the Secret You want to Create or Update.")
-	}
-	environment {
-		ACTION           = "${params.Action}"
-		SECRET_NAME      = "${params.SecretName}"
-		AWS_REGION       = "us-east-1"
-	}
+    agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr:'5'))
+        timeout(time: 15, unit: 'MINUTES')
+        timestamps()
+    }
+    parameters {
+        choice(name: "Action", choices: "Select\ncreate\nupdate", description: "Please select create or update")
+        choice(name: "SecretType", choices: "Select\nkey:value-pair-secret\nprivate-key-secret", description: "Please select type of secret to manage")
+        string(name: "SecretName", description: "Enter the Name of the Secret You want to Create or Update.")
+    }
+    environment {
+        ACTION           = "${params.Action}"
+        SECRET_NAME      = "${params.SecretName}"
+        AWS_REGION       = "us-east-1"
+    }
 
-	stages {
+    stages {
         stage("Setting Environment") {
             steps {
                 script {
@@ -23,41 +24,80 @@ pipeline {
                 }
             }
         }
+
         stage ('Input Secrets') {
+            when {
+                expression { params.SecretType == 'key:value-pair-secret' }
+            }
             steps {
                 script {
+                    echo "Preparing to input key-value pairs for secrets"
                     def secretInput = input(
                         message: 'Enter secrets as key:value pairs, separated by commas (e.g., username:dummyuser,password:dummypassword)',
                         parameters: [string(name: 'KeyValuePairs', description: 'Enter the key-value pairs')]
                     )
 
-                    // Convert the input string into a JSON format for Secrets Manager
                     def secretMap = secretInput.tokenize(',').collectEntries { entry ->
                         def pair = entry.tokenize(':')
                         [(pair[0].trim()): pair[1].trim()]
                     }
                     def secretJSON = groovy.json.JsonOutput.toJson(secretMap)
-
-                    // Write the secrets to a temporary file
                     writeFile file: 'secret.json', text: secretJSON
                 }
             }
         }
+
         stage ('Create/Update Secrets') {
+            when {
+                expression { params.SecretType == 'key:value-pair-secret' }
+            }
             steps {
                 script {
                     echo "Creating/Updating the secrets in AWS Secrets Manager"
                     
-                    // Determine whether to create or update the secret
                     def awsCommand = "${ACTION}" == 'create' ? 
                         "aws secretsmanager create-secret --region ${AWS_REGION} --tags Key=Name,Value=\"${SECRET_NAME}\" --name \"${SECRET_NAME}\" --description \"Managed secret\" --secret-string file://secret.json" : 
                         "aws secretsmanager update-secret --region ${AWS_REGION} --secret-id \"${SECRET_NAME}\" --description \"Managed secret\" --secret-string file://secret.json"
 
-                        sh """
-                            ${awsCommand}
-                        """
-                    // Remove the temporary file after the command executes
+                    sh """
+                        ${awsCommand}
+                    """
                     sh "rm -f secret.json"
+                }
+            }
+        }
+
+        stage('Upload Private Key Only') {
+            when {
+                expression { params.SecretType == 'private-key-secret' }
+            }
+            steps {
+                script {
+                    echo "Preparing to upload private key only to Secrets Manager"
+                    def privateKeyInput = input(
+                        message: 'Enter the PRIVATE KEY (PEM format)',
+                        parameters: [text(name: 'PrivateKeyContent', defaultValue: '', description: 'Paste the PEM-formatted private key')]
+                    )
+
+                    // Save private key as JSON with "private_key" as the key
+                    def privateKeyJSON = groovy.json.JsonOutput.toJson([
+                        private_key: privateKeyInput.trim()
+                    ])
+                    writeFile file: 'private_key_secret.json', text: privateKeyJSON
+
+                    echo "Uploading private key to Secrets Manager"
+
+                    def keySecretName = "${SECRET_NAME}"
+                    def awsCommand = "${ACTION}" == 'create' ?
+                        "aws secretsmanager create-secret --region ${AWS_REGION} --tags Key=Name,Value=\"${keySecretName}\" --name \"${keySecretName}\" --description \"Private key only\" --secret-string file://private_key_secret.json" :
+                        "aws secretsmanager update-secret --region ${AWS_REGION} --secret-id \"${keySecretName}\" --description \"Private key only\" --secret-string file://private_key_secret.json"
+
+                    sh """
+                        set +x
+                        ${awsCommand}
+                        rm -f private_key_secret.json
+                        set -x
+                    """
                 }
             }
         }
