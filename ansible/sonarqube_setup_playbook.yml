@@ -1,0 +1,77 @@
+---
+- name: Deploy SonarQube in Docker
+  hosts: sonarqube
+  become: yes
+  vars:
+    sonarqube_container_name: sonarqube
+    sonarqube_image: sonarqube:10.4.1-community
+    sonarqube_port: 9000
+    sonarqube_data_dir: /opt/sonarqube-data
+    sonarqube_uid: 1000  # Default UID in SonarQube container
+
+  tasks:
+    - name: Ensure vm.max_map_count is set for Elasticsearch
+      sysctl:
+        name: vm.max_map_count
+        value: 262144
+        state: present
+        reload: yes
+
+    - name: Install Docker
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create SonarQube data directory with correct ownership
+      file:
+        path: "{{ sonarqube_data_dir }}"
+        state: directory
+        owner: "{{ sonarqube_uid }}"
+        group: "{{ sonarqube_uid }}"
+        recurse: yes
+        mode: '0755'
+
+    - name: Install firewalld
+      dnf:
+        name: firewalld
+        state: present
+
+    - name: Ensure firewalld is running and enabled
+      systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Ensure iptables is installed
+      dnf:
+        name: iptables
+        state: present
+
+    - name: Restart Docker after firewalld setup
+      systemd:
+        name: docker
+        state: restarted
+
+    - name: Run SonarQube container
+      docker_container:
+        name: "{{ sonarqube_container_name }}"
+        image: "{{ sonarqube_image }}"
+        ports:
+          - "{{ sonarqube_port }}:9000"
+        volumes:
+          - "{{ sonarqube_data_dir }}:/opt/sonarqube/data"
+        env:
+          SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+        restart_policy: always
+        state: started
+
+    - name: Open SonarQube port using shell command
+      shell: |
+        firewall-cmd --permanent --add-port={{ sonarqube_port }}/tcp
+        firewall-cmd --reload
