@@ -22,7 +22,7 @@ variable "instance_ami" {
 variable "db_secret_name" {
   description = "Name of the Secrets Manager secret"
   type        = string
-  default     = "itgenius-standalone-db-secret"
+  default     = "itgenius-db-secret"
 }
 
 
