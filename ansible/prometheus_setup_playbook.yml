@@ -1,0 +1,164 @@
+---
+- name: Install Blackbox Exporter and run Prometheus container
+  hosts: prometheus
+  become: yes
+  vars:
+    # Blackbox Exporter config
+    blackbox_version: "0.25.0"
+    blackbox_dir: /opt/blackbox_exporter
+    blackbox_user: blackbox
+    blackbox_tarball: "blackbox_exporter-{{ blackbox_version }}.linux-amd64.tar.gz"
+    blackbox_url: "https://github.com/prometheus/blackbox_exporter/releases/download/v{{ blackbox_version }}/{{ blackbox_tarball }}"
+    blackbox_extract_dir: "{{ blackbox_dir }}/blackbox_exporter-{{ blackbox_version }}.linux-amd64"
+    blackbox_config_path: "{{ blackbox_extract_dir }}/blackbox.yml"
+
+    # Prometheus config
+    prometheus_data_dir: /opt/prometheus-data
+    prometheus_container_name: prometheus
+    prometheus_image: prom/prometheus:latest
+    prometheus_config_path: "{{ prometheus_data_dir }}/prometheus.yml"
+
+    # IPs and app port
+    monolithic_server_ip: "54.91.177.119"
+    prometheus_server_ip: "3.94.192.239"
+    monolithic_app_port: "8085"
+
+  tasks:
+    ### ───── BLACKBOX EXPORTER INSTALL ─────
+
+    - name: Create blackbox_exporter user
+      user:
+        name: "{{ blackbox_user }}"
+        shell: /usr/sbin/nologin
+        system: yes
+        create_home: no
+
+    - name: Create blackbox installation directory
+      file:
+        path: "{{ blackbox_dir }}"
+        state: directory
+        owner: "{{ blackbox_user }}"
+        group: "{{ blackbox_user }}"
+        mode: '0755'
+
+    - name: Download Blackbox Exporter tarball
+      get_url:
+        url: "{{ blackbox_url }}"
+        dest: "/tmp/{{ blackbox_tarball }}"
+        mode: '0644'
+
+    - name: Extract Blackbox Exporter
+      unarchive:
+        src: "/tmp/{{ blackbox_tarball }}"
+        dest: "{{ blackbox_dir }}"
+        remote_src: yes
+        creates: "{{ blackbox_extract_dir }}"
+
+    - name: Write blackbox.yml configuration
+      copy:
+        dest: "{{ blackbox_config_path }}"
+        content: |
+          modules:
+            http_2xx_springboot_app:
+              prober: http
+              timeout: 5s
+              http:
+                preferred_ip_protocol: ip4
+                valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+                valid_status_codes: [200]
+        owner: "{{ blackbox_user }}"
+        group: "{{ blackbox_user }}"
+        mode: '0644'
+
+    - name: Symlink blackbox_exporter binary
+      file:
+        src: "{{ blackbox_extract_dir }}/blackbox_exporter"
+        dest: /usr/local/bin/blackbox_exporter
+        state: link
+        force: yes
+
+    - name: Create systemd service for Blackbox Exporter
+      copy:
+        dest: /etc/systemd/system/blackbox_exporter.service
+        content: |
+          [Unit]
+          Description=Prometheus Blackbox Exporter
+          After=network.target
+
+          [Service]
+          User={{ blackbox_user }}
+          ExecStart=/usr/local/bin/blackbox_exporter --config.file={{ blackbox_config_path }}
+          Restart=on-failure
+
+          [Install]
+          WantedBy=multi-user.target
+        mode: '0644'
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable and start Blackbox Exporter
+      systemd:
+        name: blackbox_exporter
+        enabled: yes
+        state: started
+
+    ### ───── PROMETHEUS CONTAINER DEPLOYMENT ─────
+
+    - name: Install Docker
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start and enable Docker
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create Prometheus data directory
+      file:
+        path: "{{ prometheus_data_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Write Prometheus configuration file
+      copy:
+        dest: "{{ prometheus_config_path }}"
+        content: |
+          global:
+            scrape_interval: 15s
+
+          scrape_configs:
+            - job_name: 'node_exporter'
+              static_configs:
+                - targets: ['{{ monolithic_server_ip }}:9100']
+
+            - job_name: 'blackbox_exporter'
+              metrics_path: /probe
+              params:
+                module: [http_2xx_springboot_app]
+              static_configs:
+                - targets:
+                    - http://{{ monolithic_server_ip }}:{{ monolithic_app_port }}
+              relabel_configs:
+                - source_labels: [__address__]
+                  target_label: __param_target
+                - source_labels: [__param_target]
+                  target_label: instance
+                - target_label: __address__
+                  replacement: {{ prometheus_server_ip }}:9115
+        mode: '0644'
+
+    - name: Run Prometheus container
+      docker_container:
+        name: "{{ prometheus_container_name }}"
+        image: "{{ prometheus_image }}"
+        ports:
+          - "9090:9090"
+        volumes:
+          - "{{ prometheus_data_dir }}:/etc/prometheus"
+        command: "--config.file=/etc/prometheus/prometheus.yml"
+        restart_policy: always
+        state: started
