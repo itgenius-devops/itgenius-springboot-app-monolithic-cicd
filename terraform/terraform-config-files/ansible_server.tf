@@ -109,14 +109,29 @@ resource "aws_instance" "ansible_server" {
   # Create Ansible hosts file
   cat <<EOH > /etc/ansible/hosts
   [jenkins]
-  54.92.174.9 ansible_ssh_user=ec2-user ansible_private_key_file=project-key  ## Jenkins_server
-
+  3.94.55.249 ansible_ssh_user=ec2-user ansible_private_key_file=project-key ## Jenkins_server
+  
+  [nexus]
+  34.201.145.176 ansible_ssh_user=ec2-user ansible_private_key_file=project-key  ## Nexus_server
+  
+  [grafana]
+  54.224.86.120 ansible_ssh_user=ec2-user ansible_private_key_file=project-key    ## Grafana_server
+  
+  [sonarqube]
+  3.91.154.79 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Sonarqube_server
+  
+  [monolithic_server]
+  54.91.177.119 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
+  
+  [prometheus]
+  3.94.192.239 ansible_ssh_user=ec2-user ansible_private_key_file=project-key     ## Prometheus_server
+  
   [servers]
-  35.171.187.34 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
-  54.210.119.130 ansible_ssh_user=ec2-user ansible_private_key_file=project-key  ## Nexus_server
-  54.226.121.37 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Sonarqube_server
-  54.84.79.83 ansible_ssh_user=ec2-user ansible_private_key_file=project-key     ## Prometheus_server
-  3.89.135.195 ansible_ssh_user=ec2-user ansible_private_key_file=project-key    ## Grafana_server
+  54.91.177.119 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
+  34.201.145.176 ansible_ssh_user=ec2-user ansible_private_key_file=project-key  ## Nexus_server
+  3.91.154.79 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Sonarqube_server
+  3.94.192.239 ansible_ssh_user=ec2-user ansible_private_key_file=project-key     ## Prometheus_server
+  54.224.86.120 ansible_ssh_user=ec2-user ansible_private_key_file=project-key    ## Grafana_server
   EOH
 
   # Test Ansible installation
