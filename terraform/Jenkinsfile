@@ -42,7 +42,7 @@ pipeline {
                 script {
                     // Change into the Terraform code directory
                     dir("${WORKSPACE}/terraform/terraform-config-files") {
-                            sh 'terraform init'                       
+                            sh 'terraform init -reconfigure'                       
                     }
                 }
             }
