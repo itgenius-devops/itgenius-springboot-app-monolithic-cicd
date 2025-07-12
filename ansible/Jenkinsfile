@@ -55,6 +55,7 @@ pipeline {
                    def deployCommand = '''
     cd /home/ec2-user/ansible-files 
     sudo cp * /etc/ansible/
+    /etc/ansible/
     export ANSIBLE_HOST_KEY_CHECKING=False
     sudo ansible -i /etc/ansible/hosts -m ping all
 '''
