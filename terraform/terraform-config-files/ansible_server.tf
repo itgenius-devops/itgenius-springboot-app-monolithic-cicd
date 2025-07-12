@@ -104,6 +104,7 @@ resource "aws_instance" "ansible_server" {
   inventory = /etc/ansible/hosts
   remote_user = ec2-user
   log_path = /etc/ansible/ansible.log
+  host_key_checking = False
   EOC
 
   # Create Ansible hosts file
