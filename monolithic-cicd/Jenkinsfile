@@ -45,10 +45,17 @@ pipeline {
             }
         }
 
-        stage('Application Build And Test') {
+        stage('Application Build') {
             steps {
                 sh 'chmod +x ./mvnw'
                 sh './mvnw clean install'
+                sh './mvnw test'
+            }
+        }
+
+        stage('Application Test') {
+            steps {
+                sh 'chmod +x ./mvnw'
                 sh './mvnw test'
             }
         }
@@ -66,7 +73,7 @@ pipeline {
         stage('Upload Snapshot to Nexus Repository') {
             steps {
                 script {
-                    def artifactPath = "target/itgenuine-0.0.1-SNAPSHOT.jar"
+                    def artifactPath = "target/itgenius-0.0.1-SNAPSHOT.jar"
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
@@ -76,11 +83,11 @@ pipeline {
                         repository: 'maven-snapshots',
                         credentialsId: "${NEXUS_CREDENTIAL}",
                         artifacts: [[
-                            artifactId: 'itgenuine',
+                            artifactId: 'itgenius',
                             classifier: '',
                             file: artifactPath,
                             type: 'jar',
-                            filename: "itgenuine-0.0.1-SNAPSHOT.jar"
+                            filename: "itgenius-0.0.1-SNAPSHOT.jar"
                         ]]
                     )
                 }
@@ -94,9 +101,9 @@ pipeline {
                         set -ex
                         mkdir -p ~/itgenius-app/
                         cd ~/itgenius-app/
-                        nohup java -jar itgenuine-0.0.1-SNAPSHOT.jar > logfile 2>&1 &
+                        nohup java -jar itgenius-0.0.1-SNAPSHOT.jar > logfile 2>&1 &
                         sleep 10
-                        if ! pgrep -f "itgenuine-0.0.1-SNAPSHOT.jar" > /dev/null; then
+                        if ! pgrep -f "itgenius-0.0.1-SNAPSHOT.jar" > /dev/null; then
                             echo "Application failed to start."
                             exit 1
                         fi
@@ -109,7 +116,7 @@ pipeline {
                         configName: env.MONOLITHIC_SERVER,
                         transfers: [
                             sshTransfer(
-                                sourceFiles: 'target/itgenuine-0.0.1-SNAPSHOT.jar',
+                                sourceFiles: 'target/itgenius-0.0.1-SNAPSHOT.jar',
                                 removePrefix: 'target/',
                                 makeEmptyDirs: false,
                                 remoteDirectory: '/itgenius-app/',
