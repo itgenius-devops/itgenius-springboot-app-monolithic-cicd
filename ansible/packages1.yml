@@ -21,7 +21,7 @@
 
     - name: Install MySQL client
       dnf:
-        name: mariadb
+        name: mariadb105
         state: present
 
     - name: Install Docker
