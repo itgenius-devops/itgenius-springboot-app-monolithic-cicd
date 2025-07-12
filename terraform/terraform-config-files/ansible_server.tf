@@ -105,6 +105,7 @@ resource "aws_instance" "ansible_server" {
   remote_user = ec2-user
   log_path = /etc/ansible/ansible.log
   host_key_checking = False
+  interpreter_python = /usr/bin/python3
   EOC
 
   # Create Ansible hosts file

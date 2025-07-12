@@ -83,7 +83,7 @@ pipeline {
             }
         }
 
-        stage('Deploy To Remote Server') {
+        stage('Ansible Run Playbooks') {
             steps {
                 script {
                    def deployCommand = '''
