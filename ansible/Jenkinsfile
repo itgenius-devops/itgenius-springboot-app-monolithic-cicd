@@ -48,16 +48,36 @@ pipeline {
     }
 }
 
+
         stage('Ansible ping all hosts') {
             steps {
                 script {
-                    sh '''
-                        export ANSIBLE_HOST_KEY_CHECKING=False
-                        cd /home/ec2-user/ansible-files 
-                        sudo cp * /etc/ansible/
-                        cd /etc/ansible
-                        sudo ansible -i /etc/ansible/hosts -m ping all
-                    '''
+                   def deployCommand = '''
+    cd /home/ec2-user/ansible-files 
+    sudo cp * /etc/ansible/
+    export ANSIBLE_HOST_KEY_CHECKING=False
+    sudo ansible -i /etc/ansible/hosts -m ping all
+'''
+
+                    sshPublisher(publishers: [sshPublisherDesc(
+                        configName: env.SSH_SERVER,
+                        transfers: [sshTransfer(
+                            cleanRemote: false,
+                            execCommand: deployCommand,
+                            execTimeout: 120000,
+                            flatten: false,
+                            makeEmptyDirs: false,
+                            noDefaultExcludes: false,
+                            patternSeparator: '[, ]+',
+                            remoteDirectory: '',
+                            remoteDirectorySDF: false,
+                            removePrefix: '',
+                            sourceFiles: ''
+                        )],
+                        usePromotionTimestamp: false,
+                        useWorkspaceInPromotion: false,
+                        verbose: true
+                    )])
                 }
             }
         }
