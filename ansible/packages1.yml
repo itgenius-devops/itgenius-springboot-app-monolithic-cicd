@@ -3,6 +3,12 @@
   hosts: servers
   become: yes
   tasks:
+
+    - name: Update all packages (yum equivalent to 'yum update -y')
+      yum:
+        name: '*'
+        state: latest
+
     - name: Install Java 17
       dnf:
         name: java-17-amazon-corretto-devel
