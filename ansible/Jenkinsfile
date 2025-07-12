@@ -53,7 +53,10 @@ pipeline {
                 script {
                     sh '''
                         export ANSIBLE_HOST_KEY_CHECKING=False
-                        ansible -i /etc/ansible/hosts -m ping all
+                        cd /home/ec2-user/ansible-files 
+                        sudo cp * /etc/ansible/
+                        cd /etc/ansible
+                        sudo ansible -i /etc/ansible/hosts -m ping all
                     '''
                 }
             }
