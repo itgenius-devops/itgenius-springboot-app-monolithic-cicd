@@ -33,7 +33,7 @@ pipeline {
                    sshPublisher(publishers: [sshPublisherDesc(
                        configName: env.SSH_SERVER,
                        transfers: [sshTransfer(
-                           sourceFiles: 'ansible/packages1.yml, ansible/packages2.yml, ansible/hosts',
+                           sourceFiles: 'ansible/packages1.yml, ansible/packages2.yml, ansible/hosts, ansible/grafana_setup_playbook.yml, ansible/monolithic_setup_playbook.yml, ansible/nexus_setup_playbook.yml, ansible/prometheus_setup_playbook.yml, ansible/sonarqube_setup_playbook.yml',   
                            removePrefix: 'ansible/',
                            makeEmptyDirs: false,
                            remoteDirectory: '/ansible-files/'
