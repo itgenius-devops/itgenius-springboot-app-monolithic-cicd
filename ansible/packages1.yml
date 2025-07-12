@@ -14,7 +14,9 @@
         state: present
 
     - name: Install MySQL client
-      command: yum install -y mysql
+      dnf:
+        name: mariadb
+        state: present
 
     - name: Install Docker
       dnf:
