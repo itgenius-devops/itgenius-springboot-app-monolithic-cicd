@@ -32,11 +32,6 @@
     - name: Install Docker
       command: yum install -y docker
 
-    - name: Install MySQL client (MariaDB) on Amazon Linux 2
-      yum:
-        name: mariadb
-        state: present
-
     - name: Start Docker service
       systemd:
         name: docker
