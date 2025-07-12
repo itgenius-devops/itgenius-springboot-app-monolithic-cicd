@@ -48,7 +48,17 @@ pipeline {
     }
 }
 
-    
+        stage('Ansible ping all hosts') {
+            steps {
+                script {
+                    sh '''
+                        export ANSIBLE_HOST_KEY_CHECKING=False
+                        ansible -i /etc/ansible/hosts -m ping all
+                    '''
+                }
+            }
+        }
+        
         stage('Deploy To Remote Server') {
             steps {
                 script {
