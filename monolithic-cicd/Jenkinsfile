@@ -12,6 +12,8 @@ pipeline {
         string(name: 'NEXUS_CREDENTIAL', defaultValue: 'jenkins_nexus_creds', description: 'Your Nexus credentials')
         string(name: 'REMOTE_USER', defaultValue: 'ec2-user', description: 'Remote server username')
         string(name: 'MONOLITHIC_SERVER', defaultValue: 'monolithic_server', description: 'The monolithic server Jenkins will SSH into using Publish Over SSH.')
+        string(name: 'DB_SECRET_ID', defaultValue: 'itgenius-db-secret', description: 'Secrets Manager ID for DB credentials')
+        string(name: 'DB_URL', defaultValue: 'jdbc:mysql://your-rds-endpoint:3306/itgeniusdb', description: 'JDBC Database URL')
     }
 
     environment {
@@ -97,29 +99,41 @@ pipeline {
         stage('Deploy To Monolithic Server') {
             steps {
                 script {
-                    def deployCommand = '''
+                    def deployCommand = """
                         set -ex
                         mkdir -p ~/itgenius-app/
                         cd ~/itgenius-app/
-                        nohup java -jar itgenius-0.0.1-SNAPSHOT.jar > logfile 2>&1 &
+
+                        # Export DB credentials from AWS Secrets Manager
+                        export DB_USERNAME=\$(aws secretsmanager get-secret-value --secret-id ${params.DB_SECRET_ID} --query 'SecretString' --output text | jq -r '.username')
+                        export DB_PASSWORD=\$(aws secretsmanager get-secret-value --secret-id ${params.DB_SECRET_ID} --query 'SecretString' --output text | jq -r '.password')
+
+                        # Run Spring Boot app with injected DB credentials and URL
+                        nohup java \\
+                        -Dspring.datasource.url='${params.DB_URL}' \\
+                        -Dspring.datasource.username=\$DB_USERNAME \\
+                        -Dspring.datasource.password=\$DB_PASSWORD \\
+                        -jar itgenius-0.0.1-SNAPSHOT.jar > logfile 2>&1 &
+
                         sleep 10
 
+                        # Check if app is running
                         if ! pgrep -f "itgenius-0.0.1-SNAPSHOT.jar" > /dev/null; then
-                            echo "Application failed to start (not running)."
-                            cat logfile
-                            exit 1
+                        echo "Application failed to start (not running)."
+                        cat logfile
+                        exit 1
                         fi
 
-                        # Additional log inspection for common errors
-                        if grep -q "Exception\\|Error\\|DotenvException" logfile; then
-                            echo "Application started but errors found in logs:"
-                            grep "Exception\\|Error\\|DotenvException" logfile
-                            exit 1
+                        # Inspect logs for startup issues
+                        if grep -q "Exception\\|Error" logfile; then
+                        echo "Application started but errors found in logs:"
+                        grep "Exception\\|Error" logfile
+                        exit 1
                         fi
 
                         echo "Application started successfully."
                         cat logfile
-                        '''
+                        """
 
                     sshPublisher(publishers: [sshPublisherDesc(
                         configName: env.MONOLITHIC_SERVER,
@@ -131,14 +145,6 @@ pipeline {
                                 remoteDirectory: '/itgenius-app/',
                                 execTimeout: 120000
                                 
-                            ),
-                            sshTransfer(
-                                sourceFiles: 'monolithic-cicd/.env',
-                                removePrefix: 'monolithic-cicd/',
-                                makeEmptyDirs: false,
-                                remoteDirectory: '/itgenius-app/',
-                                execCommand: deployCommand,
-                                execTimeout: 120000
                             )
                         ],
                         usePromotionTimestamp: false,

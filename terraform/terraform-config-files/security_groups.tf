@@ -86,8 +86,8 @@ resource "aws_security_group" "monolithic_sg" {
   }
 
 ingress {
-    from_port   = 3036
-    to_port     = 3036
+    from_port   = 3306
+    to_port     = 3306
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
