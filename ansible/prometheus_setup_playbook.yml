@@ -19,7 +19,7 @@
     prometheus_config_path: "{{ prometheus_data_dir }}/prometheus.yml"
 
     # IPs and app port
-    monolithic_server_ip: "54.242.85.173"
+    monolithic_server_ip: "98.84.127.188"
     prometheus_server_ip: "54.242.85.173"
     monolithic_app_port: "8085"
 
