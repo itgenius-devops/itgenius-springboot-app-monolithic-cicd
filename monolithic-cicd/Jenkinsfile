@@ -8,7 +8,7 @@ pipeline {
         string(name: 'GITHUB_REPO_URL', defaultValue: 'https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git', description: 'Github repository URL')
         string(name: 'GITHUB_BRANCH', defaultValue: 'main', description: 'Github branch for your build')
         string(name: 'SONARQUBE_SERVER_NAME', defaultValue: 'sonarqube_server', description: 'Name for your SonarQube server')
-        string(name: 'NEXUS_URL', defaultValue: 'ec2-44-220-136-131.compute-1.amazonaws.com:8081', description: 'Your Nexus URL')
+        string(name: 'NEXUS_URL', defaultValue: '3.95.198.231:8081', description: 'Your Nexus URL')
         string(name: 'NEXUS_CREDENTIAL', defaultValue: 'nexus_creds', description: 'Your Nexus credentials')
         string(name: 'REMOTE_USER', defaultValue: 'ec2-user', description: 'Remote server username')
         string(name: 'MONOLITHIC_SERVER', defaultValue: 'monolithic_server', description: 'The monolithic server Jenkins will SSH into using Publish Over SSH.')
@@ -78,7 +78,7 @@ pipeline {
                         nexusVersion: 'nexus3',
                         protocol: 'http',
                         nexusUrl: "${NEXUS_URL}",
-                        groupId: 'com.app',
+                        groupId: 'com.itgenius',
                         version: '0.0.1-SNAPSHOT',
                         repository: 'maven-snapshots',
                         credentialsId: "${NEXUS_CREDENTIAL}",
@@ -108,7 +108,7 @@ pipeline {
                             exit 1
                         fi
                         echo "Application started successfully."
-                        sleep 7
+                        sleep 10
                         cat logfile
                     '''
 
