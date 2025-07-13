@@ -143,6 +143,7 @@ pipeline {
                                 removePrefix: 'target/',
                                 makeEmptyDirs: false,
                                 remoteDirectory: '/itgenius-app/',
+                                execCommand: deployCommand,
                                 execTimeout: 120000
                                 
                             )
