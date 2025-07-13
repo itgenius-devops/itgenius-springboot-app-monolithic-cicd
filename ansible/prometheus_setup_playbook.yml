@@ -162,3 +162,56 @@
         command: "--config.file=/etc/prometheus/prometheus.yml"
         restart_policy: always
         state: started
+
+- name: Deploy Grafana Loki using Docker
+  hosts: prometheus
+  become: yes
+  vars:
+    loki_version: "3.0.0"
+    loki_dir: /opt/loki
+    loki_config_url: "https://raw.githubusercontent.com/grafana/loki/v{{ loki_version }}/cmd/loki/loki-local-config.yaml"
+    loki_config_file: "{{ loki_dir }}/loki-config.yaml"
+    loki_container_name: loki
+
+  tasks:
+    - name: Ensure Docker is installed
+      package:
+        name: docker
+        state: present
+
+    - name: Ensure Docker service is started
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create Loki configuration directory
+      file:
+        path: "{{ loki_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download Loki config file
+      get_url:
+        url: "{{ loki_config_url }}"
+        dest: "{{ loki_config_file }}"
+        mode: '0644'
+
+    - name: Remove existing Loki container if present
+      docker_container:
+        name: "{{ loki_container_name }}"
+        state: absent
+        force_kill: true
+
+    - name: Run Loki container
+      docker_container:
+        name: "{{ loki_container_name }}"
+        image: "grafana/loki:{{ loki_version }}"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "3100:3100"
+        volumes:
+          - "{{ loki_dir }}:/mnt/config"
+        command: "-config.file=/mnt/config/loki-config.yaml"
+

@@ -1,5 +1,4 @@
----
-- name: Install and run Prometheus Node Exporter
+- name: Install and run Prometheus Node Exporter and Promtail
   hosts: monolithic_server
   become: yes
   vars:
@@ -9,7 +8,11 @@
     node_exporter_tarball: "node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
     node_exporter_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/{{ node_exporter_tarball }}"
 
+    promtail_version: "2.9.2"
+    prometheus_server_ip: "54.84.225.52"  # <-- Replace with actual or inventory var if needed
+
   tasks:
+    ### ───── NODE EXPORTER SETUP ─────
     - name: Create node_exporter user
       user:
         name: "{{ node_exporter_user }}"
@@ -69,5 +72,81 @@
     - name: Enable and start node_exporter
       systemd:
         name: node_exporter
+        enabled: yes
+        state: started
+
+    ### ───── PROMTAIL SETUP ─────
+
+    - name: Download Promtail binary
+      get_url:
+        url: "https://github.com/grafana/loki/releases/download/v{{ promtail_version }}/promtail-linux-amd64.zip"
+        dest: /tmp/promtail-linux-amd64.zip
+
+    - name: Unzip Promtail binary
+      unarchive:
+        src: /tmp/promtail-linux-amd64.zip
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Move Promtail binary to /usr/local/bin
+      copy:
+        src: /tmp/promtail-linux-amd64
+        dest: /usr/local/bin/promtail
+        remote_src: yes
+        mode: '0755'
+
+    - name: Create Promtail config directory
+      file:
+        path: /etc/promtail
+        state: directory
+        mode: '0755'
+
+    - name: Write Promtail configuration file
+      copy:
+        dest: /etc/promtail/promtail-config.yaml
+        content: |
+          server:
+            http_listen_port: 9080
+            grpc_listen_port: 0
+
+          positions:
+            filename: /tmp/positions.yaml
+
+          clients:
+            - url: http://{{ prometheus_server_ip }}:3100/loki/api/v1/push
+
+          scrape_configs:
+            - job_name: system
+              static_configs:
+                - targets:
+                    - localhost
+                  labels:
+                    job: monolithic-logs
+                    __path__: /home/ec2-user/itgenius-app/logfile
+        mode: '0644'
+
+    - name: Create Promtail systemd service
+      copy:
+        dest: /etc/systemd/system/promtail.service
+        content: |
+          [Unit]
+          Description=Promtail log forwarder
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/local/bin/promtail -config.file=/etc/promtail/promtail-config.yaml
+          Restart=on-failure
+
+          [Install]
+          WantedBy=multi-user.target
+        mode: '0644'
+
+    - name: Reload systemd for Promtail
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable and start Promtail
+      systemd:
+        name: promtail
         enabled: yes
         state: started
