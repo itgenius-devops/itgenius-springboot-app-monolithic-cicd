@@ -11,13 +11,13 @@
 54.83.88.60 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Sonarqube_server
 
 [monolithic_server]
-52.205.241.144 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
+98.84.127.188 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
 
 [prometheus]
 54.242.85.173 ansible_ssh_user=ec2-user ansible_private_key_file=project-key     ## Prometheus_server
 
 [servers]
-52.205.241.144 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
+98.84.127.188 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Monolithic_server
 3.95.198.231 ansible_ssh_user=ec2-user ansible_private_key_file=project-key  ## Nexus_server
 54.83.88.60 ansible_ssh_user=ec2-user ansible_private_key_file=project-key   ## Sonarqube_server
 54.242.85.173 ansible_ssh_user=ec2-user ansible_private_key_file=project-key     ## Prometheus_server
