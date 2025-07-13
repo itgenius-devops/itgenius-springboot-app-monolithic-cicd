@@ -126,7 +126,7 @@ pipeline {
                         transfers: [
                             sshTransfer(
                                 sourceFiles: 'target/itgenius-0.0.1-SNAPSHOT.jar, monolithic-cicd/.env',
-                                removePrefix: 'target/',
+                                removePrefix: 'target/, monolithic-cicd/',
                                 makeEmptyDirs: false,
                                 remoteDirectory: '/itgenius-app/',
                                 execTimeout: 120000
