@@ -100,7 +100,8 @@ pipeline {
             steps {
                 script {
                     def deployCommand = """
-                        set -ex
+                        echo "====== Starting the application deployment in the Monolithic Server===="
+                        set +x
                         mkdir -p ~/itgenius-app/
                         cd ~/itgenius-app/
 
@@ -130,9 +131,15 @@ pipeline {
                         grep "Exception\\|Error" logfile
                         exit 1
                         fi
+                        set -x
 
-                        echo "Application started successfully."
+                        echo "✅ Application started successfully."
+                        echo "====== 🌐 Application Logs (begin) ======"
+                        set +x
                         cat logfile
+                        set -x
+                        echo "====== ✅ End of Logs ======"
+
                         """
 
                     sshPublisher(publishers: [sshPublisherDesc(
