@@ -48,3 +48,32 @@
       systemd:
         name: docker
         state: restarted
+
+    - name: Download Trivy binary
+      get_url:
+        url: https://github.com/aquasecurity/trivy/releases/download/v0.64.1/trivy_0.64.1_Linux-64bit.tar.gz
+        dest: /tmp/trivy_0.64.1_Linux-64bit.tar.gz
+        mode: '0644'
+
+    - name: Extract Trivy archive
+      unarchive:
+        src: /tmp/trivy_0.64.1_Linux-64bit.tar.gz
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Move Trivy binary to /usr/local/bin
+      copy:
+        src: /tmp/trivy
+        dest: /usr/local/bin/trivy
+        mode: '0755'
+        remote_src: yes
+
+    - name: Verify Trivy installation
+      command: trivy --version
+      register: trivy_version
+      changed_when: false
+
+    - name: Show Trivy version
+      debug:
+        msg: "{{ trivy_version.stdout }}"
+
