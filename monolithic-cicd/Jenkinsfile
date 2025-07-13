@@ -103,14 +103,23 @@ pipeline {
                         cd ~/itgenius-app/
                         nohup java -jar itgenius-0.0.1-SNAPSHOT.jar > logfile 2>&1 &
                         sleep 10
+
                         if ! pgrep -f "itgenius-0.0.1-SNAPSHOT.jar" > /dev/null; then
-                            echo "Application failed to start."
+                            echo "Application failed to start (not running)."
+                            cat logfile
                             exit 1
                         fi
+
+                        # Additional log inspection for common errors
+                        if grep -q "Exception\\|Error\\|DotenvException" logfile; then
+                            echo "Application started but errors found in logs:"
+                            grep "Exception\\|Error\\|DotenvException" logfile
+                            exit 1
+                        fi
+
                         echo "Application started successfully."
-                        sleep 10
                         cat logfile
-                    '''
+                        '''
 
                     sshPublisher(publishers: [sshPublisherDesc(
                         configName: env.MONOLITHIC_SERVER,
