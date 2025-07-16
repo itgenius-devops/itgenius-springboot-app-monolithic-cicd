@@ -24,7 +24,7 @@
       file:
         path: "{{ nexus_data_dir }}"
         state: directory
-        owner: 200  # Nexus runs as UID 200
+        owner: 200
         group: 200
         mode: '0755'
 
