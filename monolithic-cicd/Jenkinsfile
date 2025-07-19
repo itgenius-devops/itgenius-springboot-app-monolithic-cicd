@@ -40,6 +40,11 @@ pipeline {
                 }
             }
         }
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
 
         stage("Checkout Code From GitHub") {
             steps {
@@ -51,7 +56,6 @@ pipeline {
             steps {
                 sh 'chmod +x ./mvnw'
                 sh './mvnw clean install'
-                sh './mvnw test'
             }
         }
 
