@@ -137,12 +137,12 @@ pipeline {
                         fi
                         set -x
 
-                        echo "✅ Application started successfully."
-                        echo "====== 🌐 Application Logs (begin) ======"
+                        echo " Application started successfully."
+                        echo "======  Application Logs (begin) ======"
                         set +x
                         cat logfile
                         set -x
-                        echo "====== ✅ End of Logs ======"
+                        echo "======  End of Logs ======"
 
                         """
 
