@@ -65,8 +65,3 @@ variable "s3_bucket_name" {
   description = "The name of the S3 bucket for Terraform state"
   default     = "itgenius-app-statefile-s3-bucket"
 }
-
-variable "dynamodb_table_name" {
-  description = "The name of the DynamoDB table for Terraform state locking"
-  default     = "itgenius-app-statefile-dynamoDB"
-}
