@@ -4,5 +4,11 @@
       "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
       "branch": "main",
       "jenkinsfile": "secrets-manager/Jenkinsfile"
+    },
+    {
+      "name": "infrastructure-provisioning-terraform-pipeline",
+      "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
+      "branch": "main",
+      "jenkinsfile": "terraform/Jenkinsfile"
     }
   ]
