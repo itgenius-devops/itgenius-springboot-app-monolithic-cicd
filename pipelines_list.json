@@ -1,43 +1,8 @@
 [
-    
-  
-    {
-      "name": "infrastructure-provisioning-terraform-pipeline",
-      "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
-      "branch": "main",
-      "jenkinsfile": "terraform/Jenkinsfile"
-    },
-
     {
       "name": "create-update-secrets-manager-pipeline",
       "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
       "branch": "main",
       "jenkinsfile": "secrets-manager/Jenkinsfile"
-    },
-
-    {
-      "name": "infrastructure-configuration-ansible-pipeline",
-      "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
-      "branch": "main",
-      "jenkinsfile": "ansible/Jenkinsfile"
-    },
-
-    {
-      "name": "continuous-integration-continuous-deployment",
-      "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-monolithic-cicd.git",
-      "branch": "main",
-      "jenkinsfile": "monolithic-cicd/Jenkinsfile"
-    },
-    {
-      "name": "infrastructure-provisioning-terraform-pipeline-ecs",
-      "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-ecs-microservice-cicd.git",
-      "branch": "main",
-      "jenkinsfile": "terraform/Jenkinsfile"
-    },
-    {
-      "name": "continuous-integration-continuous-deployment-ecs",
-      "repo": "https://github.com/itgenius-devops/itgenius-springboot-app-ecs-microservice-cicd.git",
-      "branch": "main",
-      "jenkinsfile": "continuous-integration-continuous-deployment/Jenkinsfile"
     }
   ]
