@@ -90,3 +90,24 @@
     - name: Show Trivy version
       debug:
         msg: "{{ trivy_version.stdout }}"
+        
+- name: Prepare Jenkins user for Trivy scans
+  hosts: jenkins
+  become: yes
+  tasks:
+    - name: Create Trivy temp and cache directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: jenkins
+        group: jenkins
+        mode: '0755'
+      loop:
+        - /var/tmp/trivy
+        - /var/tmp/trivy-cache
+
+    - name: Ensure Jenkins user is part of the wheel group
+      user:
+        name: jenkins
+        groups: wheel
+        append: yes
