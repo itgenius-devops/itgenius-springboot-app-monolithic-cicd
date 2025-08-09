@@ -4,6 +4,7 @@ resource "aws_instance" "nexus_server" {
   key_name               = var.instance_key_name
   vpc_security_group_ids = [aws_security_group.nexus_sg.id]
   subnet_id              = var.instance_subnet_id
+  associate_public_ip_address = true
 
   tags = {
     Name = "nexus_server"
