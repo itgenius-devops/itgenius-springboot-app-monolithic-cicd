@@ -1,1 +1,8 @@
-[]
+[
+  {
+  "name": "example-pipeline",
+  "repo": "https://github.com/example-org/example-repo.git",
+  "branch": "main",
+  "jenkinsfile": "path/to/Jenkinsfile"
+}
+]
